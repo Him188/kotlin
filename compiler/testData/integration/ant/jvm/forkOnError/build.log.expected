@@ -1,0 +1,18 @@
+OUT:
+Buildfile: [TestData]/build.xml
+
+build:
+  [kotlinc] Compiling [[TestData]] => [[Temp]/fork.jar]
+  [kotlinc] -XX:CICompilerCount=4 -XX:InitialHeapSize=67108864 -XX:MaxHeapSize=134217728 -XX:MaxNewSize=33554432 -XX:NewSize=33554432 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=67108864 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:-UseLargePagesIndividualAllocation -XX:+UseParallelGC
+  [kotlinc] syntaxError.kt:4:5: error: unresolved reference: println1
+  [kotlinc]     println1("hello fork")
+  [kotlinc]     ^
+
+ERR:
+
+BUILD FAILED
+[TestData]/build.xml:4: Compile failed; see the compiler error output for details.
+
+Total time: [time]
+
+Return code: 1
