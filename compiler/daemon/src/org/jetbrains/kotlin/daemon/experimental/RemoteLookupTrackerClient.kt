@@ -5,7 +5,6 @@
 
 package org.jetbrains.kotlin.daemon.experimental
 
-import com.intellij.util.containers.Interner
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlin.daemon.EventManager
 import org.jetbrains.kotlin.daemon.common.*
@@ -13,6 +12,7 @@ import org.jetbrains.kotlin.incremental.components.LookupInfo
 import org.jetbrains.kotlin.incremental.components.LookupTracker
 import org.jetbrains.kotlin.incremental.components.Position
 import org.jetbrains.kotlin.incremental.components.ScopeKind
+import org.jetbrains.kotlin.utils.createStringInterner
 
 class RemoteLookupTrackerClient(
     val facade: CompilerCallbackServicesFacadeAsync,
@@ -22,7 +22,7 @@ class RemoteLookupTrackerClient(
     private val isDoNothing = runBlocking { profiler.withMeasure(this) { facade.lookupTracker_isDoNothing() } }
 
     private val lookups = hashSetOf<LookupInfo>()
-    private val interner = Interner.createStringInterner<String>()
+    private val interner = createStringInterner()
 
     override val requiresPosition: Boolean = runBlocking { profiler.withMeasure(this) { facade.lookupTracker_requiresPosition() } }
 
