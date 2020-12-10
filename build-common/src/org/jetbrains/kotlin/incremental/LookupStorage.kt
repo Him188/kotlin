@@ -16,8 +16,8 @@
 
 package org.jetbrains.kotlin.incremental
 
+import com.intellij.util.containers.Interner
 import com.intellij.util.containers.MultiMap
-import com.intellij.util.containers.StringInterner
 import org.jetbrains.annotations.TestOnly
 import org.jetbrains.kotlin.incremental.components.LookupTracker
 import org.jetbrains.kotlin.incremental.components.Position
@@ -212,8 +212,8 @@ open class LookupStorage(
 
 class LookupTrackerImpl(private val delegate: LookupTracker) : LookupTracker {
     val lookups = MultiMap.createSet<LookupSymbol, String>()
-    val pathInterner = StringInterner()
-    private val interner = StringInterner()
+    val pathInterner = Interner.createStringInterner<String>()
+    private val interner = Interner.createStringInterner<String>()
 
     override val requiresPosition: Boolean
         get() = delegate.requiresPosition
