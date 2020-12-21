@@ -6,7 +6,9 @@
 package org.jetbrains.kotlin.fir.scopes.impl
 
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
+import org.jetbrains.kotlin.fir.resolve.transformers.ensureResolved
 import org.jetbrains.kotlin.fir.scopes.*
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.name.Name
@@ -54,6 +56,7 @@ abstract class AbstractFirUseSiteMemberScope(
         val result = mutableListOf<FirNamedFunctionSymbol>()
         val firSimpleFunction = symbol.fir
         superTypesScope.processFunctionsByName(symbol.callableId.callableName) { superSymbol ->
+            superSymbol.ensureResolved(FirResolvePhase.STATUS, session)
             if (overrideChecker.isOverriddenFunction(firSimpleFunction, superSymbol.fir)) {
                 result.add(superSymbol)
             }
