@@ -53,7 +53,9 @@ abstract class FirDefaultPropertyAccessor(
     annotations = mutableListOf(),
     typeParameters = mutableListOf(),
 ) {
-    override var resolvePhase = FirResolvePhase.BODY_RESOLVE
+    override var resolvePhase
+        get() = FirResolvePhase.BODY_RESOLVE
+        set(_) {}
 
     final override var body: FirBlock?
         get() = null
