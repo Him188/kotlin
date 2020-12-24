@@ -26,7 +26,7 @@ import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.cli.jvm.compiler.CompileEnvironmentUtil.DOS_EPOCH
 import org.jetbrains.kotlin.test.TestCaseWithTmpdir
 
-class DeterministicOutputTest : TestCaseWithTmpdir() {
+class JarOutputTest : TestCaseWithTmpdir() {
 
     fun testDeterministicOutput() {
         val fooKt = tmpdir.resolve("foo.kt").also {
@@ -63,6 +63,22 @@ class DeterministicOutputTest : TestCaseWithTmpdir() {
         assertNoTimestampsAreReset(jar)
     }
 
+    /**
+     *  KT-44078
+     */
+    fun testNoModuleInfoClass() {
+        val fooKt = tmpdir.resolve("foo.kt").also {
+            it.writeText("class Foo")
+        }
+        val jar = tmpdir.resolve("jarWithoutModuleInfoClass.jar")
+        AbstractCliTest.executeCompilerGrabOutput(
+            K2JVMCompiler(),
+            listOf(fooKt.path, "-d", jar.path, "-include-runtime")
+        )
+
+        assertNoModuleInfoClass(jar)
+    }
+
     private fun assertAllTimestampsAreReset(jar: File) {
         val zis = JarInputStream(FileInputStream(jar))
         var entry: ZipEntry? = zis.nextEntry
@@ -77,6 +93,18 @@ class DeterministicOutputTest : TestCaseWithTmpdir() {
         var entry: ZipEntry? = zis.nextEntry
         while (entry != null) {
             assertNotEquals(entry.time, DOS_EPOCH, "$entry timestamp should not be reset")
+            entry = zis.nextEntry
+        }
+    }
+
+    private fun assertNoModuleInfoClass(jar: File) {
+        val zis = JarInputStream(FileInputStream(jar))
+        var entry: ZipEntry? = zis.nextEntry
+        while (entry != null) {
+            assertNotEquals(
+                "module-info.class", entry.name.substringAfterLast("/"),
+                "$entry is expected to be excluded from the resulting jar"
+            )
             entry = zis.nextEntry
         }
     }
