@@ -90,6 +90,11 @@ public class IrBytecodeListingTestGenerated extends AbstractIrBytecodeListingTes
         runTest("compiler/testData/codegen/bytecodeListing/extension.kt");
     }
 
+    @TestMetadata("fileClassWithPrivateDeclarationsOnly.kt")
+    public void testFileClassWithPrivateDeclarationsOnly() throws Exception {
+        runTest("compiler/testData/codegen/bytecodeListing/fileClassWithPrivateDeclarationsOnly.kt");
+    }
+
     @TestMetadata("immutableCollection.kt")
     public void testImmutableCollection() throws Exception {
         runTest("compiler/testData/codegen/bytecodeListing/immutableCollection.kt");
