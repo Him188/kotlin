@@ -61,7 +61,8 @@ private class FileClassLowering(val context: JvmBackendContext) : FileLoweringPa
 
         irFile.declarations.forEach {
             when (it) {
-                is IrScript -> {}
+                is IrScript -> {
+                }
                 is IrClass -> classes.add(it)
                 else -> fileClassMembers.add(it)
             }
@@ -92,6 +93,11 @@ private class FileClassLowering(val context: JvmBackendContext) : FileLoweringPa
             else -> error("unknown kind of file entry: $fileEntry")
         }
         val isMultifilePart = fileClassInfo.withJvmMultifileClass
+
+        val hasOnlyPrivateDeclarations = fileClassMembers
+            .filterIsInstance<IrDeclarationWithVisibility>()
+            .all { it.visibility == DescriptorVisibilities.PRIVATE }
+
         return IrClassImpl(
             0, fileEntry.maxOffset,
             if (!isMultifilePart || context.state.languageVersionSettings.getFlag(JvmAnalysisFlags.inheritMultifileParts))
@@ -99,7 +105,10 @@ private class FileClassLowering(val context: JvmBackendContext) : FileLoweringPa
             symbol = IrClassSymbolImpl(),
             name = fileClassInfo.fileClassFqName.shortName(),
             kind = ClassKind.CLASS,
-            visibility = if (!isMultifilePart) DescriptorVisibilities.PUBLIC else JavaDescriptorVisibilities.PACKAGE_VISIBILITY,
+            visibility = if (isMultifilePart || hasOnlyPrivateDeclarations)
+                JavaDescriptorVisibilities.PACKAGE_VISIBILITY
+            else
+                DescriptorVisibilities.PUBLIC,
             modality = Modality.FINAL
         ).apply {
             superTypes = listOf(context.irBuiltIns.anyType)
