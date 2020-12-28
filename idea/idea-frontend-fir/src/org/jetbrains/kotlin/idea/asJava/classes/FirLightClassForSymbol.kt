@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.idea.asJava.classes.createInheritanceList
 import org.jetbrains.kotlin.idea.asJava.classes.createInnerClasses
 import org.jetbrains.kotlin.idea.asJava.classes.createMethods
 import org.jetbrains.kotlin.idea.frontend.api.fir.analyzeWithSymbolAsContext
+import org.jetbrains.kotlin.idea.frontend.api.isValid
 import org.jetbrains.kotlin.idea.frontend.api.symbols.*
 import org.jetbrains.kotlin.idea.frontend.api.symbols.markers.KtSymbolKind
 import org.jetbrains.kotlin.idea.frontend.api.symbols.markers.KtSymbolVisibility
@@ -234,4 +235,6 @@ internal class FirLightClassForSymbol(
 
     override fun copy(): FirLightClassForSymbol =
         FirLightClassForSymbol(classOrObjectSymbol, manager)
+
+    override fun isValid(): Boolean = super.isValid() && classOrObjectSymbol.isValid()
 }
