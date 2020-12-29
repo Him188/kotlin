@@ -96,7 +96,8 @@ private class FileClassLowering(val context: JvmBackendContext) : FileLoweringPa
 
         val hasOnlyPrivateDeclarations = fileClassMembers
             .filterIsInstance<IrDeclarationWithVisibility>()
-            .all { it.visibility == DescriptorVisibilities.PRIVATE }
+            .map(IrDeclarationWithVisibility::visibility)
+            .all(DescriptorVisibilities::isPrivate)
 
         return IrClassImpl(
             0, fileEntry.maxOffset,
