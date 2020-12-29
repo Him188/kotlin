@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.backend.common.phaser.makeIrModulePhase
 import org.jetbrains.kotlin.backend.jvm.JvmBackendContext
 import org.jetbrains.kotlin.codegen.AsmUtil
 import org.jetbrains.kotlin.config.JvmAnalysisFlags
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
@@ -94,10 +95,11 @@ private class FileClassLowering(val context: JvmBackendContext) : FileLoweringPa
         }
         val isMultifilePart = fileClassInfo.withJvmMultifileClass
 
-        val hasOnlyPrivateDeclarations = fileClassMembers
-            .filterIsInstance<IrDeclarationWithVisibility>()
-            .map(IrDeclarationWithVisibility::visibility)
-            .all(DescriptorVisibilities::isPrivate)
+        val onlyPrivateDeclarationsAndFeatureIsEnabled =
+            context.state.languageVersionSettings.supportsFeature(LanguageFeature.PackagePrivateFileClassesWithAllPrivateMembers) && fileClassMembers
+                .filterIsInstance<IrDeclarationWithVisibility>()
+                .map(IrDeclarationWithVisibility::visibility)
+                .all(DescriptorVisibilities::isPrivate)
 
         return IrClassImpl(
             0, fileEntry.maxOffset,
@@ -106,7 +108,7 @@ private class FileClassLowering(val context: JvmBackendContext) : FileLoweringPa
             symbol = IrClassSymbolImpl(),
             name = fileClassInfo.fileClassFqName.shortName(),
             kind = ClassKind.CLASS,
-            visibility = if (isMultifilePart || hasOnlyPrivateDeclarations)
+            visibility = if (isMultifilePart || onlyPrivateDeclarationsAndFeatureIsEnabled)
                 JavaDescriptorVisibilities.PACKAGE_VISIBILITY
             else
                 DescriptorVisibilities.PUBLIC,
