@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.fir.symbols.impl
 import org.jetbrains.kotlin.fir.FirSymbolOwner
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.symbols.ConeClassLikeLookupTag
+import org.jetbrains.kotlin.fir.symbols.impl.utils.LazyValueWithPostCompute
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -26,7 +27,17 @@ sealed class FirClassSymbol<C : FirClass<C>>(classId: ClassId) : FirClassLikeSym
     override fun toLookupTag(): ConeClassLikeLookupTag = lookupTag
 }
 
-class FirRegularClassSymbol(classId: ClassId) : FirClassSymbol<FirRegularClass>(classId)
+open class FirRegularClassSymbol(classId: ClassId) : FirClassSymbol<FirRegularClass>(classId)
+
+class FirJavaLazyClassSymbol(
+    classId: ClassId, createFirClass: (FirJavaLazyClassSymbol) -> FirRegularClass,
+    modifyFirClass: (FirRegularClass) -> Unit
+) : FirRegularClassSymbol(classId) {
+    private val lazy = LazyValueWithPostCompute({ createFirClass(this) }, modifyFirClass)
+    override var fir: FirRegularClass
+        get() = lazy.getValue()
+        set(_) {}
+}
 
 val ANONYMOUS_CLASS_ID = ClassId(FqName.ROOT, FqName.topLevel(Name.special("<anonymous>")), true)
 

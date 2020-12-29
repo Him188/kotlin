@@ -62,9 +62,9 @@ class KotlinDeserializedJvmSymbolsProvider(
     private val javaClassFinder: JavaClassFinder,
     private val kotlinScopeProvider: KotlinScopeProvider,
 ) : FirSymbolProvider(session) {
-    private val classCache = SymbolProviderCache<ClassId, FirRegularClassSymbol>()
-    private val typeAliasCache = SymbolProviderCache<ClassId, FirTypeAliasSymbol>()
-    private val packagePartsCache = SymbolProviderCache<FqName, Collection<PackagePartsCacheData>>()
+    private val classCache = SymbolProviderCache.createNonThreadSafeCache<ClassId, FirRegularClassSymbol>()
+    private val typeAliasCache = SymbolProviderCache.createNonThreadSafeCache<ClassId, FirTypeAliasSymbol>()
+    private val packagePartsCache = SymbolProviderCache.createNonThreadSafeCache<FqName, Collection<PackagePartsCacheData>>()
 
     // TODO: implement thread safety for this property
     private val handledByJava = HashSet<ClassId>()

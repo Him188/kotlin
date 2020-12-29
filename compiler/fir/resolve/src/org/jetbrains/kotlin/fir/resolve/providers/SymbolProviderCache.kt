@@ -6,41 +6,22 @@
 package org.jetbrains.kotlin.fir.resolve.providers
 
 import org.jetbrains.kotlin.fir.PrivateForInline
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-inline class SymbolProviderCache<K, V : Any> @PrivateForInline constructor(@PrivateForInline val cache: HashMap<K, Any>) {
-    @OptIn(PrivateForInline::class)
-    constructor() : this(HashMap())
-
+inline class SymbolProviderCache<K, V : Any> @PrivateForInline constructor(@PrivateForInline val cache: MutableMap<K, Any>) {
     @PrivateForInline
     object NullValue
 
     @OptIn(PrivateForInline::class)
     inline fun lookupCacheOrCalculate(key: K, crossinline l: (K) -> V?): V? {
-        @Suppress("UNCHECKED_CAST")
-        return when (val value = cache[key]) {
-            null -> {
-                val calculated = l(key)
-                cache[key] = calculated ?: NullValue
-                calculated
-            }
-            NullValue -> null
-            else -> value as V
+        val value = cache.computeIfAbsent(key) {
+            l(key) ?: NullValue
         }
-    }
 
-    @OptIn(PrivateForInline::class)
-    inline fun <T> lookupCacheOrCalculateWithPostCompute(
-        key: K, crossinline l: (K) -> Pair<V?, T>, postCompute: (V, T) -> Unit
-    ): V? {
         @Suppress("UNCHECKED_CAST")
-        return when (val value = cache[key]) {
-            null -> {
-                val calculated = l(key)
-                cache[key] = calculated.first ?: NullValue
-                calculated.first?.let { postCompute(it, calculated.second) }
-                calculated.first
-            }
+        return when (value) {
             NullValue -> null
             else -> value as V
         }
@@ -61,5 +42,15 @@ inline class SymbolProviderCache<K, V : Any> @PrivateForInline constructor(@Priv
     @OptIn(PrivateForInline::class)
     fun remove(key: K) {
         cache.remove(key)
+    }
+
+    companion object {
+        @OptIn(PrivateForInline::class)
+        fun <K, V : Any> createThreadSafeCache(): SymbolProviderCache<K, V> =
+            SymbolProviderCache(ConcurrentHashMap())
+
+        @OptIn(PrivateForInline::class)
+        fun <K, V : Any> createNonThreadSafeCache(): SymbolProviderCache<K, V> =
+            SymbolProviderCache(hashMapOf())
     }
 }
