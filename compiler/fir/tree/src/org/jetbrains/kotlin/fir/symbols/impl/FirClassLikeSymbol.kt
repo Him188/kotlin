@@ -29,14 +29,29 @@ sealed class FirClassSymbol<C : FirClass<C>>(classId: ClassId) : FirClassLikeSym
 
 open class FirRegularClassSymbol(classId: ClassId) : FirClassSymbol<FirRegularClass>(classId)
 
-class FirJavaLazyClassSymbol(
-    classId: ClassId, createFirClass: (FirJavaLazyClassSymbol) -> FirRegularClass,
+class FirLazyClassSymbol(
+    classId: ClassId,
+    createFirClass: (FirRegularClassSymbol) -> FirRegularClass,
     modifyFirClass: (FirRegularClass) -> Unit
 ) : FirRegularClassSymbol(classId) {
     private val lazy = LazyValueWithPostCompute({ createFirClass(this) }, modifyFirClass)
     override var fir: FirRegularClass
         get() = lazy.getValue()
         set(_) {}
+}
+
+fun createClassSymbol(
+    classId: ClassId,
+    createLazySymbol: Boolean,
+    createFirClass: (FirRegularClassSymbol) -> FirRegularClass,
+    modifyFirClass: (FirRegularClass) -> Unit
+): FirRegularClassSymbol = if (createLazySymbol) {
+    FirLazyClassSymbol(classId, createFirClass, modifyFirClass)
+} else {
+    FirRegularClassSymbol(classId).also { symbol ->
+        val firClass = createFirClass(symbol)
+        modifyFirClass(firClass)
+    }
 }
 
 val ANONYMOUS_CLASS_ID = ClassId(FqName.ROOT, FqName.topLevel(Name.special("<anonymous>")), true)

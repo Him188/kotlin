@@ -18,10 +18,7 @@ import org.jetbrains.kotlin.fir.declarations.builder.buildSimpleFunction
 import org.jetbrains.kotlin.fir.declarations.builder.buildTypeParameter
 import org.jetbrains.kotlin.fir.declarations.builder.buildValueParameter
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
-import org.jetbrains.kotlin.fir.deserialization.FirBuiltinAnnotationDeserializer
-import org.jetbrains.kotlin.fir.deserialization.FirConstDeserializer
-import org.jetbrains.kotlin.fir.deserialization.FirDeserializationContext
-import org.jetbrains.kotlin.fir.deserialization.deserializeClassToSymbol
+import org.jetbrains.kotlin.fir.deserialization.*
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProviderInternals
@@ -283,14 +280,14 @@ class FirBuiltinSymbolProvider(session: FirSession, val kotlinScopeProvider: Kot
         ): FirRegularClassSymbol? {
             val classIdExists = classId in classDataFinder.allClassIds
             if (!classIdExists) return null
-            return lookup.getOrPut(classId, { FirRegularClassSymbol(classId) }) { symbol ->
+            return lookup.getOrPut(classId){
                 val classData = classDataFinder.findClassData(classId)!!
                 val classProto = classData.classProto
-
                 deserializeClassToSymbol(
-                    classId, classProto, symbol, nameResolver, session,
+                    classId, classProto, nameResolver, session,
                     null, kotlinScopeProvider, parentContext,
                     null,
+                    createLazySymbol = true,
                     this::findAndDeserializeClass,
                 )
             }

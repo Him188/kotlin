@@ -337,12 +337,12 @@ class KotlinDeserializedJvmSymbolsProvider(
             return findAndDeserializeClassViaParent(classId)
         }
 
-        val symbol = FirRegularClassSymbol(classId)
-        deserializeClassToSymbol(
-            classId, classProto, symbol, nameResolver, session,
+        val symbol = deserializeClassToSymbol(
+            classId, classProto, nameResolver, session,
             JvmBinaryAnnotationDeserializer(session, kotlinJvmBinaryClass, byteContent),
             kotlinScopeProvider,
             parentContext, KotlinJvmBinarySourceElement(kotlinJvmBinaryClass),
+            createLazySymbol = false,
             this::findAndDeserializeClass
         )
 
