@@ -5,29 +5,55 @@
 
 package org.jetbrains.kotlin.fir.java
 
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.persistentHashMapOf
+import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.declarations.FirCallableDeclaration
+import org.jetbrains.kotlin.fir.java.declarations.FirJavaConstructor
+import org.jetbrains.kotlin.fir.java.declarations.FirJavaMethod
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeParameterSymbol
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
+import org.jetbrains.kotlin.load.java.structure.JavaTypeParameterListOwner
 
-internal class JavaTypeParameterStack {
+internal class JavaTypeParameterStack(
+    private val typeParameterMap: PersistentMap<JavaTypeParameter, FirTypeParameterSymbol> = persistentHashMapOf()
+) {
+    fun pushParameters(parameters: Map<JavaTypeParameter, FirTypeParameterSymbol>): JavaTypeParameterStack =
+        JavaTypeParameterStack(typeParameterMap.putAll(parameters))
 
-    private val typeParameterMap = mutableMapOf<JavaTypeParameter, FirTypeParameterSymbol>()
-
-    fun addParameter(javaTypeParameter: JavaTypeParameter, symbol: FirTypeParameterSymbol) {
-        typeParameterMap[javaTypeParameter] = symbol
-    }
-
-    fun addStack(javaTypeParameterStack: JavaTypeParameterStack) {
-        typeParameterMap += javaTypeParameterStack.typeParameterMap
+    inline fun <R> withTypeParametersOf(
+        declaration: JavaTypeParameterListOwner?,
+        session: FirSession,
+        action: (JavaTypeParameterStack) -> R
+    ): R {
+        val newStack = when (declaration) {
+            null -> this
+            else -> JavaTypeParameterConverter.convertTypeParameters(
+                session,
+                this,
+                declaration.typeParameters
+            )
+        }
+        return action(newStack)
     }
 
     operator fun get(javaTypeParameter: JavaTypeParameter): FirTypeParameterSymbol {
-        return safeGet(javaTypeParameter)
-            ?: throw IllegalArgumentException("Cannot find Java type parameter $javaTypeParameter in stack")
+        return typeParameterMap[javaTypeParameter]
+            ?: throw IllegalArgumentException("Cannot find Java type parameter ${javaTypeParameter.name} in stack")
     }
-
-    fun safeGet(javaTypeParameter: JavaTypeParameter) = typeParameterMap[javaTypeParameter]
 
     companion object {
         val EMPTY: JavaTypeParameterStack = JavaTypeParameterStack()
     }
 }
+
+internal inline fun FirCallableDeclaration<*>.getOwnJavaTypeParameterStackOrDefault(
+    createDefault: () -> JavaTypeParameterStack
+): JavaTypeParameterStack = when (this) {
+    is FirJavaMethod -> javaTypeParameterStack
+    is FirJavaConstructor -> javaTypeParametersStack
+    else -> createDefault()
+}
+
+internal fun FirCallableDeclaration<*>.getOwnJavaTypeParameterStackOrDefault(default: JavaTypeParameterStack): JavaTypeParameterStack =
+    getOwnJavaTypeParameterStackOrDefault { default }

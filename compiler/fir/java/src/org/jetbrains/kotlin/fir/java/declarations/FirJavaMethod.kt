@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.fir.declarations.builder.FirFunctionBuilder
 import org.jetbrains.kotlin.fir.declarations.builder.FirTypeParametersOwnerBuilder
 import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
 import org.jetbrains.kotlin.fir.expressions.FirBlock
+import org.jetbrains.kotlin.fir.java.JavaTypeParameterStack
 import org.jetbrains.kotlin.fir.references.FirControlFlowGraphReference
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
@@ -46,7 +47,7 @@ import org.jetbrains.kotlin.util.OperatorNameConventions.UNARY_OPERATION_NAMES
 import kotlin.properties.Delegates
 
 @OptIn(FirImplementationDetail::class)
-class FirJavaMethod @FirImplementationDetail constructor(
+class FirJavaMethod @FirImplementationDetail internal constructor(
     override val source: FirSourceElement?,
     override val session: FirSession,
     override var resolvePhase: FirResolvePhase,
@@ -59,6 +60,7 @@ class FirJavaMethod @FirImplementationDetail constructor(
     override val symbol: FirNamedFunctionSymbol,
     annotationBuilder: () -> List<FirAnnotationCall>,
     override val dispatchReceiverType: ConeKotlinType?,
+    internal val javaTypeParameterStack: JavaTypeParameterStack,
 ) : FirSimpleFunction() {
     init {
         symbol.bind(this)
@@ -176,7 +178,7 @@ val ALL_JAVA_OPERATION_NAMES =
             EQUALS + COMPARE_TO + CONTAINS + INVOKE + ITERATOR + GET + SET + NEXT + HAS_NEXT
 
 @FirBuilderDsl
-class FirJavaMethodBuilder : FirFunctionBuilder, FirTypeParametersOwnerBuilder, FirAnnotationContainerBuilder {
+internal class FirJavaMethodBuilder : FirFunctionBuilder, FirTypeParametersOwnerBuilder, FirAnnotationContainerBuilder {
     override var source: FirSourceElement? = null
     override lateinit var session: FirSession
     override var attributes: FirDeclarationAttributes = FirDeclarationAttributes()
@@ -194,6 +196,7 @@ class FirJavaMethodBuilder : FirFunctionBuilder, FirTypeParametersOwnerBuilder, 
     var isStatic: Boolean by Delegates.notNull()
     var resolvePhase: FirResolvePhase = FirResolvePhase.ANALYZED_DEPENDENCIES
     lateinit var annotationBuilder: () -> List<FirAnnotationCall>
+    lateinit var javaTypeParameterStack: JavaTypeParameterStack
 
     @Deprecated("Modification of 'origin' has no impact for FirJavaFunctionBuilder", level = DeprecationLevel.HIDDEN)
     override var origin: FirDeclarationOrigin
@@ -217,10 +220,11 @@ class FirJavaMethodBuilder : FirFunctionBuilder, FirTypeParametersOwnerBuilder, 
             symbol,
             annotationBuilder,
             dispatchReceiverType,
+            javaTypeParameterStack
         )
     }
 }
 
-inline fun buildJavaMethod(init: FirJavaMethodBuilder.() -> Unit): FirJavaMethod {
+internal inline fun buildJavaMethod(init: FirJavaMethodBuilder.() -> Unit): FirJavaMethod {
     return FirJavaMethodBuilder().apply(init).build()
 }

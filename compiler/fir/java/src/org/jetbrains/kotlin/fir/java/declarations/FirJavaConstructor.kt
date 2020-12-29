@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.fir.declarations.builder.FirConstructorBuilder
 import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
 import org.jetbrains.kotlin.fir.expressions.FirBlock
 import org.jetbrains.kotlin.fir.expressions.FirDelegatedConstructorCall
+import org.jetbrains.kotlin.fir.java.JavaTypeParameterStack
 import org.jetbrains.kotlin.fir.references.FirControlFlowGraphReference
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
@@ -27,7 +28,7 @@ import org.jetbrains.kotlin.serialization.deserialization.descriptors.Deserializ
 import kotlin.properties.Delegates
 
 @OptIn(FirImplementationDetail::class)
-class FirJavaConstructor @FirImplementationDetail constructor(
+class FirJavaConstructor @FirImplementationDetail internal constructor(
     override val source: FirSourceElement?,
     override val session: FirSession,
     override val symbol: FirConstructorSymbol,
@@ -39,6 +40,7 @@ class FirJavaConstructor @FirImplementationDetail constructor(
     override var status: FirDeclarationStatus,
     override var resolvePhase: FirResolvePhase,
     override val dispatchReceiverType: ConeKotlinType?,
+    internal val javaTypeParametersStack: JavaTypeParameterStack,
 ) : FirConstructor() {
     override val receiverTypeRef: FirTypeRef? get() = null
 
@@ -141,11 +143,12 @@ class FirJavaConstructor @FirImplementationDetail constructor(
 }
 
 @FirBuilderDsl
-class FirJavaConstructorBuilder : FirConstructorBuilder() {
+internal class FirJavaConstructorBuilder : FirConstructorBuilder() {
     lateinit var visibility: Visibility
     var isInner: Boolean by Delegates.notNull()
     var isPrimary: Boolean by Delegates.notNull()
     lateinit var annotationBuilder: () -> List<FirAnnotationCall>
+    lateinit var javaTypeParameterStack: JavaTypeParameterStack
 
     @OptIn(FirImplementationDetail::class)
     override fun build(): FirJavaConstructor {
@@ -160,7 +163,8 @@ class FirJavaConstructorBuilder : FirConstructorBuilder() {
             annotationBuilder,
             status,
             resolvePhase = FirResolvePhase.ANALYZED_DEPENDENCIES,
-            dispatchReceiverType
+            dispatchReceiverType,
+            javaTypeParameterStack,
         )
     }
 
@@ -200,7 +204,7 @@ class FirJavaConstructorBuilder : FirConstructorBuilder() {
         }
 }
 
-inline fun buildJavaConstructor(init: FirJavaConstructorBuilder.() -> Unit): FirJavaConstructor {
+internal inline fun buildJavaConstructor(init: FirJavaConstructorBuilder.() -> Unit): FirJavaConstructor {
     return FirJavaConstructorBuilder().apply(init).build()
 }
 

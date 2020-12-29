@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.builder.buildConstExpression
 import org.jetbrains.kotlin.fir.java.JavaTypeParameterStack
 import org.jetbrains.kotlin.fir.java.declarations.*
+import org.jetbrains.kotlin.fir.java.getOwnJavaTypeParameterStackOrDefault
 import org.jetbrains.kotlin.fir.render
 import org.jetbrains.kotlin.fir.scopes.jvm.computeJvmDescriptor
 import org.jetbrains.kotlin.fir.symbols.CallableId
@@ -44,9 +45,6 @@ class FirSignatureEnhancement(
     private val session: FirSession,
     private val overridden: FirSimpleFunction.() -> List<FirCallableMemberDeclaration<*>>
 ) {
-    private val javaTypeParameterStack: JavaTypeParameterStack =
-        if (owner is FirJavaClass) owner.javaTypeParameterStack else JavaTypeParameterStack.EMPTY
-
     private val jsr305State: JavaTypeEnhancementState = session.javaTypeEnhancementState ?: JavaTypeEnhancementState.DEFAULT
 
     private val typeQualifierResolver = FirAnnotationTypeQualifierResolver(session, jsr305State)
@@ -154,7 +152,7 @@ class FirSignatureEnhancement(
         }
         return enhanceMethod(firMethod, original.callableId, name)
     }
-    
+
     private fun enhanceMethod(
         firMethod: FirFunction<*>,
         methodId: CallableId,
@@ -417,4 +415,14 @@ class FirSignatureEnhancement(
             containerApplicabilityType
         )
     }
+
+    private val FirCallableMemberDeclaration<*>.javaTypeParameterStack: JavaTypeParameterStack
+        get() = getOwnJavaTypeParameterStackOrDefault(
+            createDefault = {
+                when (owner) {
+                    is FirJavaClass -> owner.javaTypeParameterStack
+                    else -> JavaTypeParameterStack.EMPTY
+                }
+            }
+        )
 }

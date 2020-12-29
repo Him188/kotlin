@@ -9,7 +9,9 @@ import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.java.JavaTypeParameterStack
+import org.jetbrains.kotlin.fir.java.declarations.FirJavaMethod
 import org.jetbrains.kotlin.fir.java.enhancement.readOnlyToMutable
+import org.jetbrains.kotlin.fir.java.getOwnJavaTypeParameterStackOrDefault
 import org.jetbrains.kotlin.fir.java.toConeKotlinTypeProbablyFlexible
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
@@ -23,7 +25,7 @@ import org.jetbrains.kotlin.load.java.SpecialGenericSignatures
 
 class JavaOverrideChecker internal constructor(
     private val session: FirSession,
-    private val javaTypeParameterStack: JavaTypeParameterStack
+    private val ownerClassJavaTypeParameterStack: JavaTypeParameterStack
 ) : FirAbstractOverrideChecker() {
     private val context: ConeTypeContext = session.typeContext
 
@@ -77,6 +79,7 @@ class JavaOverrideChecker internal constructor(
         candidateTypeRef: FirTypeRef,
         baseTypeRef: FirTypeRef,
         substitutor: ConeSubstitutor,
+        javaTypeParameterStack: JavaTypeParameterStack,
         mayBeSpecialBuiltIn: Boolean = false
     ) = isEqualTypes(
         candidateTypeRef.toConeKotlinTypeProbablyFlexible(session, javaTypeParameterStack),
@@ -102,7 +105,7 @@ class JavaOverrideChecker internal constructor(
     private fun Collection<FirTypeParameterRef>.buildErasure() = associate {
         val symbol = it.symbol
         val firstBound = symbol.fir.bounds.first() // Note that in Java type parameter typed arguments always erased to first bound
-        symbol to firstBound.toConeKotlinTypeProbablyFlexible(session, javaTypeParameterStack)
+        symbol to firstBound.toConeKotlinTypeProbablyFlexible(session, ownerClassJavaTypeParameterStack)
     }
 
     private fun FirTypeRef?.isTypeParameterDependent(): Boolean =
@@ -174,8 +177,12 @@ class JavaOverrideChecker internal constructor(
         val mayBeSpecialBuiltIn =
             baseDeclaration.name in SpecialGenericSignatures.ERASED_VALUE_PARAMETERS_SHORT_NAMES &&
                     SpecialGenericSignatures.ERASED_VALUE_PARAMETERS_SIGNATURES.any { it.endsWith(jvmDescriptor) }
+        val javaTypeParameterStack = when (overrideCandidate) {
+            is FirJavaMethod -> overrideCandidate.javaTypeParameterStack
+            else -> this.ownerClassJavaTypeParameterStack
+        }
         return overrideCandidate.valueParameters.zip(baseParameterTypes).all { (paramFromJava, baseType) ->
-            isEqualTypes(paramFromJava.returnTypeRef, baseType, substitutor, mayBeSpecialBuiltIn)
+            isEqualTypes(paramFromJava.returnTypeRef, baseType, substitutor, javaTypeParameterStack, mayBeSpecialBuiltIn)
         }
     }
 
@@ -189,7 +196,12 @@ class JavaOverrideChecker internal constructor(
                     return overrideCandidate.valueParameters.isEmpty()
                 } else {
                     if (overrideCandidate.valueParameters.size != 1) return false
-                    return isEqualTypes(receiverTypeRef, overrideCandidate.valueParameters.single().returnTypeRef, ConeSubstitutor.Empty)
+                    return isEqualTypes(
+                        receiverTypeRef,
+                        overrideCandidate.valueParameters.single().returnTypeRef,
+                        ConeSubstitutor.Empty,
+                        overrideCandidate.javaTypeParameterStack
+                    )
                 }
             }
             is FirProperty -> {
@@ -197,11 +209,19 @@ class JavaOverrideChecker internal constructor(
                 return when {
                     receiverTypeRef == null -> overrideReceiverTypeRef == null
                     overrideReceiverTypeRef == null -> false
-                    else -> isEqualTypes(receiverTypeRef, overrideReceiverTypeRef, ConeSubstitutor.Empty)
+                    else -> isEqualTypes(
+                        receiverTypeRef,
+                        overrideReceiverTypeRef,
+                        ConeSubstitutor.Empty,
+                        overrideCandidate.javaTypeParameterStack
+                    )
                 }
             }
             else -> false
         }
     }
+
+    private val FirCallableMemberDeclaration<*>.javaTypeParameterStack
+        get() = getOwnJavaTypeParameterStackOrDefault(ownerClassJavaTypeParameterStack)
 
 }
