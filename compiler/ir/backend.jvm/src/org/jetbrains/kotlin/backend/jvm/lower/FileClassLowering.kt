@@ -81,15 +81,14 @@ private class FileClassLowering(val context: JvmBackendContext) : FileLoweringPa
 
     private fun createFileClass(irFile: IrFile, fileClassMembers: List<IrDeclaration>): IrClass {
         val fileEntry = irFile.fileEntry
-        val fileClassInfo: JvmFileClassInfo?
-        when (fileEntry) {
+        val fileClassInfo = when (fileEntry) {
             is PsiSourceManager.PsiFileEntry -> {
                 val ktFile = context.psiSourceManager.getKtFile(fileEntry)
                     ?: throw AssertionError("Unexpected file entry: $fileEntry")
-                fileClassInfo = JvmFileClassUtil.getFileClassInfoNoResolve(ktFile)
+                JvmFileClassUtil.getFileClassInfoNoResolve(ktFile)
             }
             is NaiveSourceBasedFileEntryImpl -> {
-                fileClassInfo = JvmSimpleFileClassInfo(PackagePartClassUtils.getPackagePartFqName(irFile.fqName, fileEntry.name), false)
+                JvmSimpleFileClassInfo(PackagePartClassUtils.getPackagePartFqName(irFile.fqName, fileEntry.name), false)
             }
             else -> error("unknown kind of file entry: $fileEntry")
         }
