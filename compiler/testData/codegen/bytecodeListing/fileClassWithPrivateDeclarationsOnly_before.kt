@@ -1,5 +1,6 @@
 // WITH_RUNTIME
 // IGNORE_BACKEND: JVM
+// !LANGUAGE: -PackagePrivateFileClassesWithAllPrivateMembers
 
 private fun f() {
 }
