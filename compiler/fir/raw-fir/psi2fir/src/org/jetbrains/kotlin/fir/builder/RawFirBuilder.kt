@@ -71,7 +71,6 @@ class RawFirBuilder(
     }
 
     fun buildPropertyWithBody(property: KtProperty, original: FirProperty?): FirProperty {
-        require(!property.isLocal) { "Should not be used to build local properties (variables)" }
         return buildDeclaration(property, original) as FirProperty
     }
 
