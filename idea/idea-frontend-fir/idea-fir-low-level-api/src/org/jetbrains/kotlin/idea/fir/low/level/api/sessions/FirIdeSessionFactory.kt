@@ -34,10 +34,13 @@ import org.jetbrains.kotlin.idea.fir.low.level.api.IdeSessionComponents
 import org.jetbrains.kotlin.idea.fir.low.level.api.file.builder.FirFileBuilder
 import org.jetbrains.kotlin.idea.fir.low.level.api.file.builder.ModuleFileCacheImpl
 import org.jetbrains.kotlin.idea.fir.low.level.api.lazy.resolve.FirLazyDeclarationResolver
-import org.jetbrains.kotlin.idea.fir.low.level.api.providers.FirModuleWithDependenciesSymbolProvider
+import org.jetbrains.kotlin.idea.fir.low.level.api.providers.*
+import org.jetbrains.kotlin.idea.fir.low.level.api.providers.FirIdeBuiltinsAndCloneableSessionProvider
+import org.jetbrains.kotlin.idea.fir.low.level.api.providers.FirIdeLibrariesSessionProvider
 import org.jetbrains.kotlin.idea.fir.low.level.api.providers.FirIdeProvider
-import org.jetbrains.kotlin.idea.fir.low.level.api.sessions.FirIdeSessionFactory.registerIdeComponents
+import org.jetbrains.kotlin.idea.fir.low.level.api.providers.FirModuleWithDependenciesSymbolProvider
 import org.jetbrains.kotlin.idea.fir.low.level.api.providers.FirThreadSafeSymbolProviderWrapper
+import org.jetbrains.kotlin.idea.fir.low.level.api.sessions.FirIdeSessionFactory.registerIdeComponents
 import org.jetbrains.kotlin.idea.fir.low.level.api.util.ModuleLibrariesSearchScope
 import org.jetbrains.kotlin.idea.fir.low.level.api.util.checkCanceled
 import org.jetbrains.kotlin.load.java.JavaClassFinderImpl
@@ -164,30 +167,29 @@ internal object FirIdeSessionFactory {
 
             val kotlinScopeProvider = KotlinScopeProvider(::wrapScopeWithJvmMapped)
 
-            @OptIn(ExperimentalStdlibApi::class)
-            register(
-                FirSymbolProvider::class,
-                FirCompositeSymbolProvider(
-                    this,
-                    buildList {
-                        add(
-                            FirThreadSafeSymbolProviderWrapper(
-                                KotlinDeserializedJvmSymbolsProvider(
-                                    this@apply,
-                                    project,
-                                    packagePartProvider,
-                                    javaSymbolProvider,
-                                    kotlinClassFinder,
-                                    javaClassFinder,
-                                    kotlinScopeProvider
-                                )
+            val symbolProvider = FirCompositeSymbolProvider(
+                this,
+                @OptIn(ExperimentalStdlibApi::class)
+                buildList {
+                    add(
+                        FirThreadSafeSymbolProviderWrapper(
+                            KotlinDeserializedJvmSymbolsProvider(
+                                this@apply,
+                                project,
+                                packagePartProvider,
+                                javaSymbolProvider,
+                                kotlinClassFinder,
+                                javaClassFinder,
+                                kotlinScopeProvider
                             )
                         )
-                        add(javaSymbolProvider)
-                        addAll((builtinsAndCloneableSession.firSymbolProvider as FirCompositeSymbolProvider).providers)
-                    }
-                )
+                    )
+                    add(javaSymbolProvider)
+                    addAll((builtinsAndCloneableSession.firSymbolProvider as FirCompositeSymbolProvider).providers)
+                }
             )
+            register(FirProvider::class, FirIdeLibrariesSessionProvider(symbolProvider))
+            register(FirSymbolProvider::class, symbolProvider)
             register(FirJvmTypeMapper::class, FirJvmTypeMapper(this))
         }
     }
@@ -202,16 +204,15 @@ internal object FirIdeSessionFactory {
             registerIdeComponents()
 
             val kotlinScopeProvider = KotlinScopeProvider(::wrapScopeWithJvmMapped)
-            register(
-                FirSymbolProvider::class,
-                FirCompositeSymbolProvider(
-                    this,
-                    listOf(
-                        FirBuiltinSymbolProvider(this, kotlinScopeProvider),
-                        FirCloneableSymbolProvider(this, kotlinScopeProvider),
-                    )
+            val symbolProvider = FirCompositeSymbolProvider(
+                this,
+                listOf(
+                    FirBuiltinSymbolProvider(this, kotlinScopeProvider),
+                    FirCloneableSymbolProvider(this, kotlinScopeProvider),
                 )
             )
+            register(FirSymbolProvider::class, symbolProvider)
+            register(FirProvider::class, FirIdeBuiltinsAndCloneableSessionProvider(symbolProvider))
             register(FirJvmTypeMapper::class, FirJvmTypeMapper(this))
         }
     }

@@ -223,7 +223,6 @@ abstract class AbstractFirStatusResolveTransformer(
 
     protected val containingClass: FirClass<*>? get() = classes.lastOrNull()
 
-    private val firProvider = session.firProvider
     private val symbolProvider = session.firSymbolProvider
 
     protected abstract fun FirDeclaration.needResolveMembers(): Boolean
@@ -379,6 +378,7 @@ abstract class AbstractFirStatusResolveTransformer(
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun forceResolveStatusesOfClass(regularClass: FirRegularClass) {
+        val firProvider = regularClass.session.firProvider
         if (statusComputationSession[regularClass] == StatusComputationSession.StatusComputationStatus.Computed) return
         val file = firProvider.getFirClassifierContainerFileIfAny(regularClass.symbol)
         if (regularClass.status is FirResolvedDeclarationStatus) {

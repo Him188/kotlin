@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.fir.extensions.extensionService
 import org.jetbrains.kotlin.fir.extensions.registerExtensions
 import org.jetbrains.kotlin.fir.java.*
 import org.jetbrains.kotlin.fir.java.deserialization.KotlinDeserializedJvmSymbolsProvider
+import org.jetbrains.kotlin.fir.resolve.firSymbolProvider
 import org.jetbrains.kotlin.fir.resolve.providers.FirProvider
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
 import org.jetbrains.kotlin.fir.resolve.providers.impl.*
@@ -119,26 +120,25 @@ object FirSessionFactory {
 
             val kotlinScopeProvider = KotlinScopeProvider(::wrapScopeWithJvmMapped)
 
-            register(
-                FirSymbolProvider::class,
-                FirCompositeSymbolProvider(
-                    this,
-                    listOf(
-                        KotlinDeserializedJvmSymbolsProvider(
-                            this, project,
-                            packagePartProvider,
-                            javaSymbolProvider,
-                            kotlinClassFinder,
-                            javaClassFinder,
-                            kotlinScopeProvider
-                        ),
-                        FirBuiltinSymbolProvider(this, kotlinScopeProvider),
-                        FirCloneableSymbolProvider(this, kotlinScopeProvider),
+            val symbolProvider = FirCompositeSymbolProvider(
+                this,
+                listOf(
+                    KotlinDeserializedJvmSymbolsProvider(
+                        this, project,
+                        packagePartProvider,
                         javaSymbolProvider,
-                        FirDependenciesSymbolProviderImpl(this)
-                    )
+                        kotlinClassFinder,
+                        javaClassFinder,
+                        kotlinScopeProvider
+                    ),
+                    FirBuiltinSymbolProvider(this, kotlinScopeProvider),
+                    FirCloneableSymbolProvider(this, kotlinScopeProvider),
+                    javaSymbolProvider,
+                    FirDependenciesSymbolProviderImpl(this)
                 )
             )
+            register(FirSymbolProvider::class, symbolProvider)
+            register(FirProvider::class, FirLibrarySessionProvider(firSymbolProvider))
         }
     }
 
