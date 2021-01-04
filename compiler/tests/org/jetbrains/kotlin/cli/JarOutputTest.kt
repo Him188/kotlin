@@ -17,14 +17,12 @@
 package org.jetbrains.kotlin.cli
 
 import java.io.File
-import java.io.FileInputStream
-import java.util.jar.JarInputStream
-import java.util.zip.ZipEntry
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.cli.jvm.compiler.CompileEnvironmentUtil.DOS_EPOCH
 import org.jetbrains.kotlin.test.TestCaseWithTmpdir
+import java.util.jar.JarFile
 
 class JarOutputTest : TestCaseWithTmpdir() {
 
@@ -80,32 +78,23 @@ class JarOutputTest : TestCaseWithTmpdir() {
     }
 
     private fun assertAllTimestampsAreReset(jar: File) {
-        val zis = JarInputStream(FileInputStream(jar))
-        var entry: ZipEntry? = zis.nextEntry
-        while (entry != null) {
+        for (entry in JarFile(jar).entries()) {
             assertEquals(entry.time, DOS_EPOCH, "$entry timestamp should be reset")
-            entry = zis.nextEntry
         }
     }
 
     private fun assertNoTimestampsAreReset(jar: File) {
-        val zis = JarInputStream(FileInputStream(jar))
-        var entry: ZipEntry? = zis.nextEntry
-        while (entry != null) {
+        for (entry in JarFile(jar).entries()) {
             assertNotEquals(entry.time, DOS_EPOCH, "$entry timestamp should not be reset")
-            entry = zis.nextEntry
         }
     }
 
     private fun assertNoModuleInfoClass(jar: File) {
-        val zis = JarInputStream(FileInputStream(jar))
-        var entry: ZipEntry? = zis.nextEntry
-        while (entry != null) {
+        for (entry in JarFile(jar).entries()) {
             assertNotEquals(
                 "module-info.class", entry.name.substringAfterLast("/"),
                 "$entry is expected to be excluded from the resulting jar"
             )
-            entry = zis.nextEntry
         }
     }
 }
