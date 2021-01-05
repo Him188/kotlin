@@ -92,7 +92,7 @@ class Kotlin2JvmTask : KotlinCompilerBaseTask() {
         val javaHome = System.getProperty("java.home")
         val javaBin = javaHome + separator + "bin" + separator + "java"
         val classpath = System.getProperty("java.class.path")
-        var redirector = Redirector(this)
+        val redirector = Redirector(this)
 
         fillArguments()
 
@@ -112,7 +112,7 @@ class Kotlin2JvmTask : KotlinCompilerBaseTask() {
         exe.commandline = command.toTypedArray()
         log("Executing command: ${command.joinToString(" ")}", LogLevel.DEBUG.level)
         log("Compiling ${src!!.list().toList()} => [${output!!.canonicalPath}]")
-        var exitCode = exe.execute()
+        val exitCode = exe.execute()
         redirector.complete()
         if (failOnError && exitCode != 0) {
             throw BuildException("Compile failed; see the compiler error output for details.")
