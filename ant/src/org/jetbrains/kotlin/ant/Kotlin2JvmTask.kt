@@ -91,7 +91,6 @@ class Kotlin2JvmTask : KotlinCompilerBaseTask() {
     private fun exec() {
         val javaHome = System.getProperty("java.home")
         val javaBin = javaHome + separator + "bin" + separator + "java"
-        val classpath = System.getProperty("java.class.path")
         val redirector = Redirector(this)
 
         fillArguments()
@@ -100,7 +99,7 @@ class Kotlin2JvmTask : KotlinCompilerBaseTask() {
         command.add(javaBin)
         command.addAll(cmdl.vmCommand.arguments) // jvm args
         command.add("-cp")
-        command.add(classpath + pathSeparator + KotlinAntTaskUtil.compilerJar.canonicalPath)
+        command.add(KotlinAntTaskUtil.compilerJar.canonicalPath)
         command.add(compilerFqName)
         command.addAll(args) // compiler args
 
