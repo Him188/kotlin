@@ -9,11 +9,7 @@
             <jvmarg value="-XX:CICompilerCount=4"/>
             <jvmarg value="-XX:+PrintCommandLineFlags"/>
 
-            <compilerarg line="-jvm-target 1.8"/>
-            <compilerarg value="-Xno-call-assertions"/>
-            <compilerarg value="-Xno-param-assertions"/>
-<!--            <compilerarg value="-Xreport-perf"/>-->
-            <compilerarg value="-progressive"/>
+            <compilerarg value="-nowarn"/>
         </kotlinc>
     </target>
 </project>
