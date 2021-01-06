@@ -18,6 +18,12 @@ class ConeClassLikeLookupTagImpl(override val classId: ClassId) : ConeClassLikeL
         assert(!classId.isLocal) { "You should use ConeClassLookupTagWithFixedSymbol for local $classId!" }
     }
 
+    /**
+     * [OneElementWeakMap] is safely initialized as it is immutable,
+     * so it does not matter if we safe publish it or not, we will see either null
+     * or [OneElementWeakMap] fully
+     * but maybe we should mark it as volatile to avoid recalculating it
+     */
     @LookupTagInternals
     var boundSymbol: OneElementWeakMap<FirSession, FirClassLikeSymbol<*>?>? = null
 
