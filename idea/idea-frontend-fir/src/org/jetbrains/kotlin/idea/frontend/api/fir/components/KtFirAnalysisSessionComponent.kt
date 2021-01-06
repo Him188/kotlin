@@ -16,9 +16,5 @@ internal interface KtFirAnalysisSessionComponent {
     val firResolveState get() = analysisSession.firResolveState
     fun ConeKotlinType.asKtType() = analysisSession.firSymbolBuilder.buildKtType(this)
 
-    fun createTypeCheckerContext() = ConeTypeCheckerContext(
-        isErrorTypeEqualsToAnything = true,
-        isStubTypeEqualsToAnything = true,
-        analysisSession.firResolveState.rootModuleSession //TODO use correct session here
-    )
+    fun createTypeCheckerContext() = analysisSession.coneTypeCheckerContext
 }

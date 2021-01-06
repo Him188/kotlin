@@ -8,13 +8,18 @@ package org.jetbrains.kotlin.fir.resolve.inference
 import org.jetbrains.kotlin.fir.*
 import org.jetbrains.kotlin.fir.types.ConeInferenceContext
 import org.jetbrains.kotlin.fir.types.ConeTypeCheckerContext
+import org.jetbrains.kotlin.fir.types.threadLocalConeTypeCheckerContext
 import org.jetbrains.kotlin.resolve.calls.inference.components.*
 import org.jetbrains.kotlin.resolve.calls.inference.model.NewConstraintSystemImpl
 import org.jetbrains.kotlin.types.AbstractTypeApproximator
 
-@NoMutableState
+@ThreadSafeMutableState
 class InferenceComponents(val session: FirSession) : FirSessionComponent {
-    val ctx: ConeTypeCheckerContext = ConeTypeCheckerContext(isErrorTypeEqualsToAnything = false, isStubTypeEqualsToAnything = true, session)
+    val ctx: ConeTypeCheckerContext by threadLocalConeTypeCheckerContext(
+        isErrorTypeEqualsToAnything = false,
+        isStubTypeEqualsToAnything = true,
+        session
+    )
 
     val approximator: AbstractTypeApproximator = object : AbstractTypeApproximator(ctx) {}
     val trivialConstraintTypeInferenceOracle = TrivialConstraintTypeInferenceOracle.create(ctx)

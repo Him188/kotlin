@@ -28,6 +28,9 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.types.AbstractTypeCheckerContext
 import org.jetbrains.kotlin.types.TypeSystemCommonBackendContext
 import org.jetbrains.kotlin.types.model.*
+import java.lang.ref.WeakReference
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 class ErrorTypeConstructor(val reason: String) : TypeConstructorMarker {
     override fun toString(): String = reason
@@ -597,3 +600,26 @@ class ConeTypeCheckerContext(
         return firstCandidate
     }
 }
+
+
+/**
+ * Stores values created by [createValue] in thread local
+ * [WeakReference] is needed to avoid memory leaks
+ */
+private class ThreadLocalWeakCache<T : Any>(private val createValue: () -> T) : ReadOnlyProperty<Any?, T> {
+    private val cache = ThreadLocal<WeakReference<T>>()
+
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        cache.get()?.get()?.let { return it }
+        val value = createValue()
+        cache.set(WeakReference(value))
+        return value
+    }
+}
+
+fun threadLocalConeTypeCheckerContext(
+    isErrorTypeEqualsToAnything: Boolean,
+    isStubTypeEqualsToAnything: Boolean,
+    session: FirSession
+): ReadOnlyProperty<Any?, ConeTypeCheckerContext> =
+    ThreadLocalWeakCache { ConeTypeCheckerContext(isErrorTypeEqualsToAnything, isStubTypeEqualsToAnything, session) }

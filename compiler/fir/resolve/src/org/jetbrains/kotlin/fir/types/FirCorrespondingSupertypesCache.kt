@@ -17,10 +17,19 @@ import org.jetbrains.kotlin.types.AbstractTypeCheckerContext
 import org.jetbrains.kotlin.types.model.CaptureStatus
 import org.jetbrains.kotlin.types.model.SimpleTypeMarker
 import org.jetbrains.kotlin.types.model.TypeConstructorMarker
+import java.lang.ref.WeakReference
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
+
 
 @ThreadSafeMutableState
 class FirCorrespondingSupertypesCache(private val session: FirSession) : FirSessionComponent {
-    private val context = ConeTypeCheckerContext(isErrorTypeEqualsToAnything = false, isStubTypeEqualsToAnything = true, session = session)
+    private val context by threadLocalConeTypeCheckerContext(
+        isErrorTypeEqualsToAnything = false,
+        isStubTypeEqualsToAnything = true,
+        session = session
+    )
+
     private val cache = HashMap<ConeClassLikeLookupTag, Map<ConeClassLikeLookupTag, List<ConeClassLikeType>>?>(1000, 0.5f)
 
     fun getCorrespondingSupertypes(

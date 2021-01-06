@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.idea.frontend.api.fir
 import com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.fir.declarations.FirFile
 import org.jetbrains.kotlin.fir.resolve.firSymbolProvider
+import org.jetbrains.kotlin.fir.types.threadLocalConeTypeCheckerContext
 import org.jetbrains.kotlin.idea.fir.low.level.api.api.FirModuleResolveState
 import org.jetbrains.kotlin.idea.fir.low.level.api.api.LowLevelFirApiFacadeForCompletion
 import org.jetbrains.kotlin.idea.fir.low.level.api.api.getFirFile
@@ -37,6 +38,12 @@ private constructor(
     init {
         assertIsValidAndAccessible()
     }
+
+    internal val coneTypeCheckerContext by threadLocalConeTypeCheckerContext(
+        isErrorTypeEqualsToAnything = true,
+        isStubTypeEqualsToAnything = true,
+        firResolveState.rootModuleSession //TODO use correct session here
+    )
 
     internal val towerDataContextProvider: TowerDataContextProvider = TowerDataContextProvider(this)
 
