@@ -20,6 +20,7 @@ import org.apache.tools.ant.BuildException
 import org.apache.tools.ant.taskdefs.Execute
 import org.apache.tools.ant.taskdefs.Redirector
 import org.apache.tools.ant.types.*
+import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
 import java.io.File.pathSeparator
 import java.io.File.separator
 
@@ -93,11 +94,15 @@ class Kotlin2JvmTask : KotlinCompilerBaseTask() {
         val javaBin = javaHome + separator + "bin" + separator + "java"
         val redirector = Redirector(this)
 
+        val msgRendererPropKey = MessageRenderer.PROPERTY_KEY
+        val msgRendererPropVal = MessageRenderer.PLAIN_FULL_PATHS.name
+
         fillArguments()
 
         val command = ArrayList<String>()
         command.add(javaBin)
         command.addAll(cmdl.vmCommand.arguments) // jvm args
+        command.add("-D$msgRendererPropKey=$msgRendererPropVal") // same MessageRenderer as non-forking mode
         command.add("-cp")
         command.add(KotlinAntTaskUtil.compilerJar.canonicalPath)
         command.add(compilerFqName)
@@ -122,4 +127,3 @@ class Kotlin2JvmTask : KotlinCompilerBaseTask() {
         return cmdl.createVmArgument()
     }
 }
-
