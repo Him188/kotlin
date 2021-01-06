@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.fir.java
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.util.PsiUtilCore
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
@@ -33,6 +34,7 @@ import org.jetbrains.kotlin.fir.types.impl.ConeTypeParameterTypeImpl
 import org.jetbrains.kotlin.load.java.JavaClassFinder
 import org.jetbrains.kotlin.load.java.JvmAnnotationNames
 import org.jetbrains.kotlin.load.java.structure.*
+import org.jetbrains.kotlin.load.java.structure.impl.JavaClassImpl
 import org.jetbrains.kotlin.load.java.structure.impl.JavaElementImpl
 import org.jetbrains.kotlin.load.kotlin.KotlinClassFinder
 import org.jetbrains.kotlin.name.ClassId
@@ -92,8 +94,14 @@ open class JavaSymbolProvider(
             } else {
                 FirLazyClassSymbol(
                     classId = classId,
-                    createFirClass = { convertJavaClassToFir(it, foundClass) },
-                    modifyFirClass = { initializeJavaClass(it as FirJavaClass, foundClass) }
+                    createFirClass = {
+                        foundClass.assertIsValidIfBuiltByPsi()
+                        convertJavaClassToFir(it, foundClass)
+                    },
+                    modifyFirClass = {
+                        foundClass.assertIsValidIfBuiltByPsi()
+                        initializeJavaClass(it as FirJavaClass, foundClass)
+                    }
                 )
             }
         }
@@ -532,6 +540,12 @@ private inline class JavaTypeParameterStackCache constructor(
     private class ParentTypeParameterClassCacheEntry {
         val cache: MutableMap<FirRegularClassSymbol, JavaTypeParameterStack> = hashMapOf()
         var deep: Int = 0
+    }
+}
+
+private fun JavaClass.assertIsValidIfBuiltByPsi() {
+    if (this is JavaClassImpl) {
+        PsiUtilCore.ensureValid(psi)
     }
 }
 
