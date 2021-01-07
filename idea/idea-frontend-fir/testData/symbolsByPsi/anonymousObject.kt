@@ -11,6 +11,7 @@ class AnonymousContainer {
 /*
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Unit
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: <anonymous>.run
   isExtension: false
@@ -30,6 +31,7 @@ KtFirFunctionSymbol:
 
 KtFirKotlinPropertySymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: <anonymous>.data
   getter: KtFirPropertyGetterSymbol(<getter>)
@@ -51,6 +53,7 @@ KtFirKotlinPropertySymbol:
   visibility: PUBLIC
 
 KtFirAnonymousObjectSymbol:
+  annotationClassIds: []
   annotations: []
   origin: SOURCE
   superTypes: [[] java/lang/Runnable]
@@ -58,6 +61,7 @@ KtFirAnonymousObjectSymbol:
 
 KtFirKotlinPropertySymbol:
   annotatedType: [] java/lang/Runnable
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: AnonymousContainer.anonymousObject
   getter: KtFirPropertyGetterSymbol(<getter>)
@@ -79,6 +83,7 @@ KtFirKotlinPropertySymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: AnonymousContainer
   classKind: CLASS

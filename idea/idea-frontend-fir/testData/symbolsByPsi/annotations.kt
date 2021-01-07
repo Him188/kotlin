@@ -13,6 +13,7 @@ class X {
 /*
 KtFirFunctionValueParameterSymbol:
   annotatedType: [] kotlin/String
+  annotationClassIds: []
   annotations: []
   hasDefaultValue: false
   isVararg: false
@@ -22,6 +23,7 @@ KtFirFunctionValueParameterSymbol:
 
 KtFirFunctionValueParameterSymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   hasDefaultValue: false
   isVararg: false
@@ -31,6 +33,7 @@ KtFirFunctionValueParameterSymbol:
 
 KtFirConstructorSymbol:
   annotatedType: [] Anno
+  annotationClassIds: []
   annotations: []
   containingClassIdIfNonLocal: Anno
   isPrimary: true
@@ -40,6 +43,7 @@ KtFirConstructorSymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: Anno
   classKind: ANNOTATION_CLASS
@@ -56,6 +60,7 @@ KtFirClassOrObjectSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Unit
+  annotationClassIds: [Anno]
   annotations: [Anno(param1 = funparam, param2 = 3)]
   callableIdIfNonLocal: X.x
   isExtension: false
@@ -74,6 +79,7 @@ KtFirFunctionSymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: [Anno]
   annotations: [Anno(param1 = param, param2 = 2)]
   classIdIfNonLocal: X
   classKind: CLASS

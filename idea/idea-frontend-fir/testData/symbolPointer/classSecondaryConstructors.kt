@@ -6,6 +6,7 @@ class A() {
 // SYMBOLS:
 KtFirConstructorSymbol:
   annotatedType: [] A
+  annotationClassIds: []
   annotations: []
   containingClassIdIfNonLocal: A
   isPrimary: true
@@ -16,6 +17,7 @@ KtFirConstructorSymbol:
 
 KtFirFunctionValueParameterSymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   hasDefaultValue: false
   isVararg: false
@@ -25,6 +27,7 @@ KtFirFunctionValueParameterSymbol:
 
 KtFirConstructorSymbol:
   annotatedType: [] A
+  annotationClassIds: []
   annotations: []
   containingClassIdIfNonLocal: A
   isPrimary: false
@@ -35,6 +38,7 @@ KtFirConstructorSymbol:
 
 KtFirFunctionValueParameterSymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   hasDefaultValue: false
   isVararg: false
@@ -44,6 +48,7 @@ KtFirFunctionValueParameterSymbol:
 
 KtFirFunctionValueParameterSymbol:
   annotatedType: [] kotlin/String
+  annotationClassIds: []
   annotations: []
   hasDefaultValue: false
   isVararg: false
@@ -53,6 +58,7 @@ KtFirFunctionValueParameterSymbol:
 
 KtFirConstructorSymbol:
   annotatedType: [] A
+  annotationClassIds: []
   annotations: []
   containingClassIdIfNonLocal: A
   isPrimary: false
@@ -62,6 +68,7 @@ KtFirConstructorSymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: A
   classKind: CLASS

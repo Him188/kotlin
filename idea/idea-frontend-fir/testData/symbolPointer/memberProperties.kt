@@ -6,6 +6,7 @@ class A {
 // SYMBOLS:
 KtFirKotlinPropertySymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: A.x
   getter: KtFirPropertyGetterSymbol(<getter>)
@@ -28,6 +29,7 @@ KtFirKotlinPropertySymbol:
 
 KtFirPropertyGetterSymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   hasBody: true
   isDefault: false
@@ -40,6 +42,7 @@ KtFirPropertyGetterSymbol:
 
 KtFirKotlinPropertySymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: A.y
   getter: KtFirPropertyGetterSymbol(<getter>)
@@ -61,6 +64,7 @@ KtFirKotlinPropertySymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: A
   classKind: CLASS

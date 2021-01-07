@@ -14,6 +14,7 @@ KtFirTypeParameterSymbol:
   upperBounds: [kotlin/Any?]
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: A
   classKind: CLASS

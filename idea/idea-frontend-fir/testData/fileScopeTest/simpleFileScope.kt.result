@@ -1,5 +1,6 @@
 FILE SYMBOL:
 KtFirFileSymbol:
+  annotationClassIds: []
   annotations: []
   origin: SOURCE
 
@@ -9,6 +10,7 @@ CALLABLE NAMES:
 CALLABLE SYMBOLS:
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: test
   isExtension: false
@@ -28,6 +30,7 @@ KtFirFunctionSymbol:
 
 KtFirKotlinPropertySymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: testVal
   getter: KtFirPropertyGetterSymbol(<getter>)
@@ -53,6 +56,7 @@ CLASSIFIER NAMES:
 
 CLASSIFIER SYMBOLS:
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: C
   classKind: CLASS
@@ -68,6 +72,7 @@ KtFirClassOrObjectSymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: I
   classKind: INTERFACE

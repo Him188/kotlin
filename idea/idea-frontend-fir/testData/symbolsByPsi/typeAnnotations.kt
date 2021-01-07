@@ -18,6 +18,7 @@ class X : @Anno1 I {
 // SYMBOLS:
 /*
 KtFirClassOrObjectSymbol:
+  annotationClassIds: [kotlin/annotation/Target]
   annotations: [kotlin/annotation/Target(allowedTargets = KtUnsupportedConstantValue)]
   classIdIfNonLocal: Anno1
   classKind: ANNOTATION_CLASS
@@ -33,6 +34,7 @@ KtFirClassOrObjectSymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: [kotlin/annotation/Target]
   annotations: [kotlin/annotation/Target(allowedTargets = KtUnsupportedConstantValue)]
   classIdIfNonLocal: Anno2
   classKind: ANNOTATION_CLASS
@@ -48,6 +50,7 @@ KtFirClassOrObjectSymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: [kotlin/annotation/Target]
   annotations: [kotlin/annotation/Target(allowedTargets = KtUnsupportedConstantValue)]
   classIdIfNonLocal: Anno3
   classKind: ANNOTATION_CLASS
@@ -63,6 +66,7 @@ KtFirClassOrObjectSymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: [kotlin/annotation/Target]
   annotations: [kotlin/annotation/Target(allowedTargets = KtUnsupportedConstantValue)]
   classIdIfNonLocal: Anno4
   classKind: ANNOTATION_CLASS
@@ -78,6 +82,7 @@ KtFirClassOrObjectSymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: I
   classKind: INTERFACE
@@ -94,6 +99,7 @@ KtFirClassOrObjectSymbol:
 
 KtFirFunctionValueParameterSymbol:
   annotatedType: [Anno2()] I
+  annotationClassIds: []
   annotations: []
   hasDefaultValue: false
   isVararg: false
@@ -103,6 +109,7 @@ KtFirFunctionValueParameterSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [Anno3()] I
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: X.f
   isExtension: false
@@ -122,6 +129,7 @@ KtFirFunctionSymbol:
 
 KtFirKotlinPropertySymbol:
   annotatedType: [Anno4()] I
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: X.x
   getter: KtFirPropertyGetterSymbol(<getter>)
@@ -143,6 +151,7 @@ KtFirKotlinPropertySymbol:
   visibility: PUBLIC
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: X
   classKind: CLASS

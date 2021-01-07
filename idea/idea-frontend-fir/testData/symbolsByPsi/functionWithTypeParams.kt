@@ -9,6 +9,7 @@ KtFirTypeParameterSymbol:
 
 KtFirFunctionValueParameterSymbol:
   annotatedType: [] X
+  annotationClassIds: []
   annotations: []
   hasDefaultValue: false
   isVararg: false
@@ -18,6 +19,7 @@ KtFirFunctionValueParameterSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Unit
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: foo
   isExtension: false

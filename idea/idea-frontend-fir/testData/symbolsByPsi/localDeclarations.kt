@@ -16,6 +16,7 @@ KtFirLocalVariableSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Unit
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: null
   isExtension: false
@@ -34,6 +35,7 @@ KtFirFunctionSymbol:
   visibility: LOCAL
 
 KtFirClassOrObjectSymbol:
+  annotationClassIds: []
   annotations: []
   classIdIfNonLocal: null
   classKind: CLASS
@@ -50,6 +52,7 @@ KtFirClassOrObjectSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Unit
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: yyy
   isExtension: false

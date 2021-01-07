@@ -3,6 +3,7 @@ class: kotlin/collections/MutableList
 // SYMBOLS:
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.add
   isExtension: false
@@ -22,6 +23,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Unit
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.add
   isExtension: false
@@ -41,6 +43,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.addAll
   isExtension: false
@@ -60,6 +63,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.addAll
   isExtension: false
@@ -79,6 +83,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Unit
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.clear
   isExtension: false
@@ -98,6 +103,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/collections/MutableListIterator<E>
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.listIterator
   isExtension: false
@@ -117,6 +123,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/collections/MutableListIterator<E>
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.listIterator
   isExtension: false
@@ -136,6 +143,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.remove
   isExtension: false
@@ -155,6 +163,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.removeAll
   isExtension: false
@@ -174,6 +183,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] E
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.removeAt
   isExtension: false
@@ -193,6 +203,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.retainAll
   isExtension: false
@@ -212,6 +223,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] E
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.set
   isExtension: false
@@ -231,6 +243,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/collections/MutableList<E>
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.subList
   isExtension: false
@@ -250,6 +263,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.contains
   isExtension: false
@@ -269,6 +283,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.containsAll
   isExtension: false
@@ -288,6 +303,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] E
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.get
   isExtension: false
@@ -307,6 +323,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.indexOf
   isExtension: false
@@ -326,6 +343,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.isEmpty
   isExtension: false
@@ -345,6 +363,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/collections/MutableIterator<E>
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.iterator
   isExtension: false
@@ -364,6 +383,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.lastIndexOf
   isExtension: false
@@ -383,6 +403,7 @@ KtFirFunctionSymbol:
 
 KtFirKotlinPropertySymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.List.size
   getter: null
@@ -405,6 +426,7 @@ KtFirKotlinPropertySymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Boolean
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.equals
   isExtension: false
@@ -424,6 +446,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.hashCode
   isExtension: false
@@ -443,6 +466,7 @@ KtFirFunctionSymbol:
 
 KtFirFunctionSymbol:
   annotatedType: [] kotlin/String
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: kotlin.collections.MutableList.toString
   isExtension: false

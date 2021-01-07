@@ -4,6 +4,7 @@ val Int.y get() = this
 // SYMBOLS:
 KtFirKotlinPropertySymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: x
   getter: KtFirPropertyGetterSymbol(<getter>)
@@ -26,6 +27,7 @@ KtFirKotlinPropertySymbol:
 
 KtFirPropertyGetterSymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   hasBody: true
   isDefault: false
@@ -38,6 +40,7 @@ KtFirPropertyGetterSymbol:
 
 KtFirKotlinPropertySymbol:
   annotatedType: [] kotlin/Int
+  annotationClassIds: []
   annotations: []
   callableIdIfNonLocal: y
   getter: KtFirPropertyGetterSymbol(<getter>)
