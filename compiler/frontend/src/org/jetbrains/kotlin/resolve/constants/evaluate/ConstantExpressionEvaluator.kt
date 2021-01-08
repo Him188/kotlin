@@ -1202,31 +1202,20 @@ private fun evaluateBinaryAndCheck(
     parameterValue: Any,
     tracer: () -> Unit = {}
 ): Any? {
-    val functions = binaryOperations[BinaryOperationKey(receiverType, parameterType, name)] ?: return null
-
-    val (function, checker) = functions
     val actualResult = try {
-        function(receiverValue, parameterValue)
+        evalBinaryOp(name, receiverType, receiverValue, parameterType, parameterValue)
     } catch (e: Exception) {
         null
     }
-    if (checker == emptyBinaryFun) {
-        return actualResult
-    }
-    assert(isIntegerType(receiverValue) && isIntegerType(parameterValue)) { "Only integer constants should be checked for overflow" }
 
     fun toBigInteger(value: Any?) = BigInteger.valueOf((value as Number).toLong())
 
-    val refinedChecker = if (name == OperatorNameConventions.MOD.asString()) {
-        binaryOperations[BinaryOperationKey(receiverType, parameterType, OperatorNameConventions.REM.asString())]?.second ?: return null
-    } else {
-        checker
+    if (actualResult != null && isIntegerType(receiverValue) && isIntegerType(parameterValue)) {
+        val checkedResult = checkBinaryOp(name, receiverType, toBigInteger(receiverValue), parameterType, toBigInteger(parameterValue))
+        if (checkedResult != null && toBigInteger(actualResult) != checkedResult) {
+            tracer()
+        }
     }
 
-    val resultInBigIntegers = refinedChecker(toBigInteger(receiverValue), toBigInteger(parameterValue))
-
-    if (toBigInteger(actualResult) != resultInBigIntegers) {
-        tracer()
-    }
     return actualResult
 }
