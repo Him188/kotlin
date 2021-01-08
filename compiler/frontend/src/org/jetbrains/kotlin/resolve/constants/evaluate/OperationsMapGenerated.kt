@@ -26,83 +26,103 @@ import java.util.HashMap
 internal val emptyBinaryFun: Function2<BigInteger, BigInteger, BigInteger> = { _, _ -> BigInteger("0") }
 internal val emptyUnaryFun: Function1<Long, Long> = { _ -> 1.toLong() }
 
-internal val unaryOperations: HashMap<UnaryOperationKey<*>, Pair<Function1<Any?, Any>, Function1<Long, Long>>>
-            = hashMapOf<UnaryOperationKey<*>, Pair<Function1<Any?, Any>, Function1<Long, Long>>>(
-    unaryOperation(BOOLEAN, "not", { a -> a.not() }, emptyUnaryFun),
-    unaryOperation(BOOLEAN, "toString", { a -> a.toString() }, emptyUnaryFun),
-    unaryOperation(BYTE, "toByte", { a -> a.toByte() }, emptyUnaryFun),
-    unaryOperation(BYTE, "toChar", { a -> a.toChar() }, emptyUnaryFun),
-    unaryOperation(BYTE, "toDouble", { a -> a.toDouble() }, emptyUnaryFun),
-    unaryOperation(BYTE, "toFloat", { a -> a.toFloat() }, emptyUnaryFun),
-    unaryOperation(BYTE, "toInt", { a -> a.toInt() }, emptyUnaryFun),
-    unaryOperation(BYTE, "toLong", { a -> a.toLong() }, emptyUnaryFun),
-    unaryOperation(BYTE, "toShort", { a -> a.toShort() }, emptyUnaryFun),
-    unaryOperation(BYTE, "toString", { a -> a.toString() }, emptyUnaryFun),
-    unaryOperation(BYTE, "unaryMinus", { a -> a.unaryMinus() }, { a -> a.unaryMinus() }),
-    unaryOperation(BYTE, "unaryPlus", { a -> a.unaryPlus() }, emptyUnaryFun),
-    unaryOperation(CHAR, "toByte", { a -> a.toByte() }, emptyUnaryFun),
-    unaryOperation(CHAR, "toChar", { a -> a.toChar() }, emptyUnaryFun),
-    unaryOperation(CHAR, "toDouble", { a -> a.toDouble() }, emptyUnaryFun),
-    unaryOperation(CHAR, "toFloat", { a -> a.toFloat() }, emptyUnaryFun),
-    unaryOperation(CHAR, "toInt", { a -> a.toInt() }, emptyUnaryFun),
-    unaryOperation(CHAR, "toLong", { a -> a.toLong() }, emptyUnaryFun),
-    unaryOperation(CHAR, "toShort", { a -> a.toShort() }, emptyUnaryFun),
-    unaryOperation(CHAR, "toString", { a -> a.toString() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "toByte", { a -> a.toByte() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "toChar", { a -> a.toChar() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "toDouble", { a -> a.toDouble() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "toFloat", { a -> a.toFloat() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "toInt", { a -> a.toInt() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "toLong", { a -> a.toLong() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "toShort", { a -> a.toShort() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "toString", { a -> a.toString() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "unaryMinus", { a -> a.unaryMinus() }, emptyUnaryFun),
-    unaryOperation(DOUBLE, "unaryPlus", { a -> a.unaryPlus() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "toByte", { a -> a.toByte() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "toChar", { a -> a.toChar() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "toDouble", { a -> a.toDouble() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "toFloat", { a -> a.toFloat() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "toInt", { a -> a.toInt() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "toLong", { a -> a.toLong() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "toShort", { a -> a.toShort() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "toString", { a -> a.toString() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "unaryMinus", { a -> a.unaryMinus() }, emptyUnaryFun),
-    unaryOperation(FLOAT, "unaryPlus", { a -> a.unaryPlus() }, emptyUnaryFun),
-    unaryOperation(INT, "inv", { a -> a.inv() }, emptyUnaryFun),
-    unaryOperation(INT, "toByte", { a -> a.toByte() }, emptyUnaryFun),
-    unaryOperation(INT, "toChar", { a -> a.toChar() }, emptyUnaryFun),
-    unaryOperation(INT, "toDouble", { a -> a.toDouble() }, emptyUnaryFun),
-    unaryOperation(INT, "toFloat", { a -> a.toFloat() }, emptyUnaryFun),
-    unaryOperation(INT, "toInt", { a -> a.toInt() }, emptyUnaryFun),
-    unaryOperation(INT, "toLong", { a -> a.toLong() }, emptyUnaryFun),
-    unaryOperation(INT, "toShort", { a -> a.toShort() }, emptyUnaryFun),
-    unaryOperation(INT, "toString", { a -> a.toString() }, emptyUnaryFun),
-    unaryOperation(INT, "unaryMinus", { a -> a.unaryMinus() }, { a -> a.unaryMinus() }),
-    unaryOperation(INT, "unaryPlus", { a -> a.unaryPlus() }, emptyUnaryFun),
-    unaryOperation(LONG, "inv", { a -> a.inv() }, emptyUnaryFun),
-    unaryOperation(LONG, "toByte", { a -> a.toByte() }, emptyUnaryFun),
-    unaryOperation(LONG, "toChar", { a -> a.toChar() }, emptyUnaryFun),
-    unaryOperation(LONG, "toDouble", { a -> a.toDouble() }, emptyUnaryFun),
-    unaryOperation(LONG, "toFloat", { a -> a.toFloat() }, emptyUnaryFun),
-    unaryOperation(LONG, "toInt", { a -> a.toInt() }, emptyUnaryFun),
-    unaryOperation(LONG, "toLong", { a -> a.toLong() }, emptyUnaryFun),
-    unaryOperation(LONG, "toShort", { a -> a.toShort() }, emptyUnaryFun),
-    unaryOperation(LONG, "toString", { a -> a.toString() }, emptyUnaryFun),
-    unaryOperation(LONG, "unaryMinus", { a -> a.unaryMinus() }, { a -> a.unaryMinus() }),
-    unaryOperation(LONG, "unaryPlus", { a -> a.unaryPlus() }, emptyUnaryFun),
-    unaryOperation(SHORT, "toByte", { a -> a.toByte() }, emptyUnaryFun),
-    unaryOperation(SHORT, "toChar", { a -> a.toChar() }, emptyUnaryFun),
-    unaryOperation(SHORT, "toDouble", { a -> a.toDouble() }, emptyUnaryFun),
-    unaryOperation(SHORT, "toFloat", { a -> a.toFloat() }, emptyUnaryFun),
-    unaryOperation(SHORT, "toInt", { a -> a.toInt() }, emptyUnaryFun),
-    unaryOperation(SHORT, "toLong", { a -> a.toLong() }, emptyUnaryFun),
-    unaryOperation(SHORT, "toShort", { a -> a.toShort() }, emptyUnaryFun),
-    unaryOperation(SHORT, "toString", { a -> a.toString() }, emptyUnaryFun),
-    unaryOperation(SHORT, "unaryMinus", { a -> a.unaryMinus() }, { a -> a.unaryMinus() }),
-    unaryOperation(SHORT, "unaryPlus", { a -> a.unaryPlus() }, emptyUnaryFun),
-    unaryOperation(STRING, "length", { a -> a.length }, emptyUnaryFun),
-    unaryOperation(STRING, "toString", { a -> a.toString() }, emptyUnaryFun)
-)
+internal fun evalUnaryOp(name: String, type: CompileTimeType<*>, value: Any): Any? {
+    when (type) {
+        BOOLEAN -> when (name) {
+            "not" -> return (value as Boolean).not()
+            "toString" -> return (value as Boolean).toString()
+        }
+        BYTE -> when (name) {
+            "toByte" -> return (value as Byte).toByte()
+            "toChar" -> return (value as Byte).toChar()
+            "toDouble" -> return (value as Byte).toDouble()
+            "toFloat" -> return (value as Byte).toFloat()
+            "toInt" -> return (value as Byte).toInt()
+            "toLong" -> return (value as Byte).toLong()
+            "toShort" -> return (value as Byte).toShort()
+            "toString" -> return (value as Byte).toString()
+            "unaryMinus" -> return (value as Byte).unaryMinus()
+            "unaryPlus" -> return (value as Byte).unaryPlus()
+        }
+        CHAR -> when (name) {
+            "toByte" -> return (value as Char).toByte()
+            "toChar" -> return (value as Char).toChar()
+            "toDouble" -> return (value as Char).toDouble()
+            "toFloat" -> return (value as Char).toFloat()
+            "toInt" -> return (value as Char).toInt()
+            "toLong" -> return (value as Char).toLong()
+            "toShort" -> return (value as Char).toShort()
+            "toString" -> return (value as Char).toString()
+        }
+        DOUBLE -> when (name) {
+            "toByte" -> return (value as Double).toByte()
+            "toChar" -> return (value as Double).toChar()
+            "toDouble" -> return (value as Double).toDouble()
+            "toFloat" -> return (value as Double).toFloat()
+            "toInt" -> return (value as Double).toInt()
+            "toLong" -> return (value as Double).toLong()
+            "toShort" -> return (value as Double).toShort()
+            "toString" -> return (value as Double).toString()
+            "unaryMinus" -> return (value as Double).unaryMinus()
+            "unaryPlus" -> return (value as Double).unaryPlus()
+        }
+        FLOAT -> when (name) {
+            "toByte" -> return (value as Float).toByte()
+            "toChar" -> return (value as Float).toChar()
+            "toDouble" -> return (value as Float).toDouble()
+            "toFloat" -> return (value as Float).toFloat()
+            "toInt" -> return (value as Float).toInt()
+            "toLong" -> return (value as Float).toLong()
+            "toShort" -> return (value as Float).toShort()
+            "toString" -> return (value as Float).toString()
+            "unaryMinus" -> return (value as Float).unaryMinus()
+            "unaryPlus" -> return (value as Float).unaryPlus()
+        }
+        INT -> when (name) {
+            "inv" -> return (value as Int).inv()
+            "toByte" -> return (value as Int).toByte()
+            "toChar" -> return (value as Int).toChar()
+            "toDouble" -> return (value as Int).toDouble()
+            "toFloat" -> return (value as Int).toFloat()
+            "toInt" -> return (value as Int).toInt()
+            "toLong" -> return (value as Int).toLong()
+            "toShort" -> return (value as Int).toShort()
+            "toString" -> return (value as Int).toString()
+            "unaryMinus" -> return (value as Int).unaryMinus()
+            "unaryPlus" -> return (value as Int).unaryPlus()
+        }
+        LONG -> when (name) {
+            "inv" -> return (value as Long).inv()
+            "toByte" -> return (value as Long).toByte()
+            "toChar" -> return (value as Long).toChar()
+            "toDouble" -> return (value as Long).toDouble()
+            "toFloat" -> return (value as Long).toFloat()
+            "toInt" -> return (value as Long).toInt()
+            "toLong" -> return (value as Long).toLong()
+            "toShort" -> return (value as Long).toShort()
+            "toString" -> return (value as Long).toString()
+            "unaryMinus" -> return (value as Long).unaryMinus()
+            "unaryPlus" -> return (value as Long).unaryPlus()
+        }
+        SHORT -> when (name) {
+            "toByte" -> return (value as Short).toByte()
+            "toChar" -> return (value as Short).toChar()
+            "toDouble" -> return (value as Short).toDouble()
+            "toFloat" -> return (value as Short).toFloat()
+            "toInt" -> return (value as Short).toInt()
+            "toLong" -> return (value as Short).toLong()
+            "toShort" -> return (value as Short).toShort()
+            "toString" -> return (value as Short).toString()
+            "unaryMinus" -> return (value as Short).unaryMinus()
+            "unaryPlus" -> return (value as Short).unaryPlus()
+        }
+        STRING -> when (name) {
+            "length" -> return (value as String).length
+            "toString" -> return (value as String).toString()
+        }
+    }
+    return null
+}
 
 internal val binaryOperations: HashMap<BinaryOperationKey<*, *>, Pair<Function2<Any?, Any?, Any>, Function2<BigInteger, BigInteger, BigInteger>>>
             = hashMapOf<BinaryOperationKey<*, *>, Pair<Function2<Any?, Any?, Any>, Function2<BigInteger, BigInteger, BigInteger>>>(

@@ -65,28 +65,26 @@ fun generate(): String {
     p.println("internal val emptyBinaryFun: Function2<BigInteger, BigInteger, BigInteger> = { _, _ -> BigInteger(\"0\") }")
     p.println("internal val emptyUnaryFun: Function1<Long, Long> = { _ -> 1.toLong() }")
     p.println()
-    p.println("internal val unaryOperations: HashMap<UnaryOperationKey<*>, Pair<Function1<Any?, Any>, Function1<Long, Long>>>")
-    p.println("            = hashMapOf<UnaryOperationKey<*>, Pair<Function1<Any?, Any>, Function1<Long, Long>>>(")
-    p.pushIndent()
 
-    val unaryOperationsMapIterator = unaryOperationsMap.iterator()
-    while (unaryOperationsMapIterator.hasNext()) {
-        val (funcName, parameters, isFunction) = unaryOperationsMapIterator.next()
-        val parenthesesOrBlank = if (isFunction) "()" else ""
-        p.println(
-                "unaryOperation(",
-                parameters.map { it.asString() }.joinToString(", "),
-                ", ",
-                "\"$funcName\"",
-                ", { a -> a.$funcName$parenthesesOrBlank }, ",
-                renderCheckUnaryOperation(funcName, parameters),
-                ")",
-                if (unaryOperationsMapIterator.hasNext()) "," else ""
-        )
+    p.println("internal fun evalUnaryOp(name: String, type: CompileTimeType<*>, value: Any): Any? {")
+    p.pushIndent()
+    p.println("when (type) {")
+    p.pushIndent()
+    for ((type, operations) in unaryOperationsMap.groupBy { (_, parameters, _) -> parameters.single() }) {
+        p.println("${type.asString()} -> when (name) {")
+        p.pushIndent()
+        for ((name, _, isFunction) in operations) {
+            val parenthesesOrBlank = if (isFunction) "()" else ""
+            p.println("\"$name\" -> return (value as ${type.typeName}).$name$parenthesesOrBlank")
+        }
+        p.popIndent()
+        p.println("}")
     }
     p.popIndent()
-    p.println(")")
-
+    p.println("}")
+    p.println("return null")
+    p.popIndent()
+    p.println("}")
     p.println()
 
     p.println("internal val binaryOperations: HashMap<BinaryOperationKey<*, *>, Pair<Function2<Any?, Any?, Any>, Function2<BigInteger, BigInteger, BigInteger>>>")
@@ -111,18 +109,6 @@ fun generate(): String {
     p.println(")")
 
     return sb.toString()
-}
-
-fun renderCheckUnaryOperation(name: String, params: List<KotlinType>): String {
-    val isAllParamsIntegers = params.fold(true) { a, b -> a && b.isIntegerType() }
-    if (!isAllParamsIntegers) {
-        return "emptyUnaryFun"
-    }
-
-    return when(name) {
-        "unaryMinus", "minus" -> "{ a -> a.$name() }"
-        else -> "emptyUnaryFun"
-    }
 }
 
 fun renderCheckBinaryOperation(name: String, params: List<KotlinType>): String {
@@ -161,4 +147,7 @@ private fun CallableDescriptor.getParametersTypes(): List<KotlinType> {
     return list
 }
 
-private fun KotlinType.asString(): String = constructor.declarationDescriptor!!.name.asString().toUpperCase()
+private fun KotlinType.asString(): String = typeName.toUpperCase()
+
+private val KotlinType.typeName: String
+    get(): String = constructor.declarationDescriptor!!.name.asString()

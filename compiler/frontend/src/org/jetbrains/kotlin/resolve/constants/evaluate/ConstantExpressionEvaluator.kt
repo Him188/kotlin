@@ -1174,17 +1174,8 @@ fun evaluateUnary(name: String, typeStr: String, value: Any): Any? {
 }
 
 private fun evaluateUnaryAndCheck(name: String, type: CompileTimeType<*>, value: Any, tracer: () -> Unit = {}): Any? {
-    val functions = unaryOperations[UnaryOperationKey(type, name)] ?: return null
-
-    val (function, check) = functions
-    val result = function(value)
-    if (check == emptyUnaryFun) {
-        return result
-    }
-    assert(isIntegerType(value)) { "Only integer constants should be checked for overflow" }
-    assert(name == "minus" || name == "unaryMinus") { "Only negation should be checked for overflow" }
-
-    if (value == result && !isZero(value)) {
+    val result = evalUnaryOp(name, type, value)
+    if (isIntegerType(value) && (name == "minus" || name == "unaryMinus") && value == result && !isZero(value)) {
         tracer()
     }
     return result
