@@ -27,6 +27,11 @@ open class FirPropertySymbol(
     constructor(name: Name) : this(CallableId(name))
 }
 
+class FirIntersectionOverridePropertySymbol(
+    callableId: CallableId,
+    val intersections: Collection<FirCallableSymbol<*>>
+) : FirPropertySymbol(callableId)
+
 class FirBackingFieldSymbol(callableId: CallableId) : FirVariableSymbol<FirProperty>(callableId)
 
 class FirDelegateFieldSymbol<D : FirVariable<D>>(callableId: CallableId) : FirVariableSymbol<D>(callableId) {
