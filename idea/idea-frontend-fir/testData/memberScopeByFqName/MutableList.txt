@@ -274,7 +274,7 @@ KtFirFunctionSymbol:
   isSuspend: false
   modality: ABSTRACT
   name: contains
-  origin: LIBRARY
+  origin: INTERSECTION_OVERRIDE
   receiverType: null
   symbolKind: MEMBER
   typeParameters: []
@@ -294,7 +294,7 @@ KtFirFunctionSymbol:
   isSuspend: false
   modality: ABSTRACT
   name: containsAll
-  origin: LIBRARY
+  origin: INTERSECTION_OVERRIDE
   receiverType: null
   symbolKind: MEMBER
   typeParameters: []
@@ -354,7 +354,7 @@ KtFirFunctionSymbol:
   isSuspend: false
   modality: ABSTRACT
   name: isEmpty
-  origin: LIBRARY
+  origin: INTERSECTION_OVERRIDE
   receiverType: null
   symbolKind: MEMBER
   typeParameters: []
@@ -374,7 +374,7 @@ KtFirFunctionSymbol:
   isSuspend: false
   modality: ABSTRACT
   name: iterator
-  origin: LIBRARY
+  origin: INTERSECTION_OVERRIDE
   receiverType: null
   symbolKind: MEMBER
   typeParameters: []
@@ -418,7 +418,7 @@ KtFirKotlinPropertySymbol:
   isVal: true
   modality: ABSTRACT
   name: size
-  origin: LIBRARY
+  origin: INTERSECTION_OVERRIDE
   receiverType: null
   setter: null
   symbolKind: MEMBER
@@ -437,7 +437,7 @@ KtFirFunctionSymbol:
   isSuspend: false
   modality: OPEN
   name: equals
-  origin: LIBRARY
+  origin: INTERSECTION_OVERRIDE
   receiverType: null
   symbolKind: MEMBER
   typeParameters: []
@@ -457,7 +457,7 @@ KtFirFunctionSymbol:
   isSuspend: false
   modality: OPEN
   name: hashCode
-  origin: LIBRARY
+  origin: INTERSECTION_OVERRIDE
   receiverType: null
   symbolKind: MEMBER
   typeParameters: []
@@ -477,7 +477,7 @@ KtFirFunctionSymbol:
   isSuspend: false
   modality: OPEN
   name: toString
-  origin: LIBRARY
+  origin: INTERSECTION_OVERRIDE
   receiverType: null
   symbolKind: MEMBER
   typeParameters: []

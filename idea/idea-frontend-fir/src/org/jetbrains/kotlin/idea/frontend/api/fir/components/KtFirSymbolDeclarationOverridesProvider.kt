@@ -5,12 +5,19 @@
 
 package org.jetbrains.kotlin.idea.frontend.api.fir.components
 
+import org.jetbrains.kotlin.fir.FirSymbolOwner
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.resolve.ScopeSession
 import org.jetbrains.kotlin.fir.scopes.*
+import org.jetbrains.kotlin.fir.symbols.AbstractFirBasedSymbol
+import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirIntersectionOverrideFunctionSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirIntersectionOverridePropertySymbol
 import org.jetbrains.kotlin.idea.frontend.api.ValidityToken
 import org.jetbrains.kotlin.idea.frontend.api.components.KtSymbolDeclarationOverridesProvider
 import org.jetbrains.kotlin.idea.frontend.api.fir.KtFirAnalysisSession
+import org.jetbrains.kotlin.idea.frontend.api.fir.buildSymbol
 import org.jetbrains.kotlin.idea.frontend.api.fir.symbols.KtFirClassOrObjectSymbol
 import org.jetbrains.kotlin.idea.frontend.api.fir.symbols.KtFirSymbol
 import org.jetbrains.kotlin.idea.frontend.api.symbols.*
@@ -61,6 +68,27 @@ internal class KtFirSymbolDeclarationOverridesProvider(
 
                 overriddenElement.toList()
             }
+        }
+    }
+
+    override fun getIntersectionOverriddenSymbols(symbol: KtCallableSymbol): Collection<KtCallableSymbol> {
+        require(symbol is KtFirSymbol<*>)
+        if (symbol.origin != KtSymbolOrigin.INTERSECTION_OVERRIDE) return emptyList()
+        return symbol.firRef.withFir { fir ->
+            val firSymbol = (fir as? FirSymbolOwner<*>)?.symbol ?: return@withFir emptyList()
+            firSymbol.getIntersectionOverriddenSymbols().map { analysisSession.firSymbolBuilder.buildCallableSymbol(it.fir) }
+        }
+    }
+
+    private fun <D> AbstractFirBasedSymbol<D>.getIntersectionOverriddenSymbols(): Collection<FirCallableSymbol<*>>
+            where D : FirSymbolOwner<D>, D : FirDeclaration {
+        require(fir.origin == FirDeclarationOrigin.IntersectionOverride)
+        return when (this) {
+            is FirIntersectionOverrideFunctionSymbol -> intersections
+            is FirIntersectionOverridePropertySymbol -> intersections
+            else -> error(
+                "FirDeclaration has origin=IntersectionOverride but it is ${this::class.simpleName}, which is not FirIntersectionOverride*Symbol"
+            )
         }
     }
 }
