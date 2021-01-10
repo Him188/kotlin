@@ -26,19 +26,16 @@ import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
-import org.jetbrains.kotlin.fileClasses.JvmFileClassInfo
 import org.jetbrains.kotlin.fileClasses.JvmFileClassUtil
 import org.jetbrains.kotlin.fileClasses.JvmSimpleFileClassInfo
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrClassImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrClassSymbolImpl
-import org.jetbrains.kotlin.ir.util.IdSignature
-import org.jetbrains.kotlin.ir.util.NaiveSourceBasedFileEntryImpl
-import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
-import org.jetbrains.kotlin.ir.util.parentAsClass
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.load.java.JavaDescriptorVisibilities
 import org.jetbrains.kotlin.load.kotlin.PackagePartClassUtils
 import org.jetbrains.kotlin.psi2ir.PsiSourceManager
+import org.jetbrains.kotlin.resolve.inline.INLINE_ONLY_ANNOTATION_FQ_NAME
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName
 import java.util.*
 
@@ -96,9 +93,11 @@ private class FileClassLowering(val context: JvmBackendContext) : FileLoweringPa
 
         val onlyPrivateDeclarationsAndFeatureIsEnabled =
             context.state.languageVersionSettings.supportsFeature(LanguageFeature.PackagePrivateFileClassesWithAllPrivateMembers) && fileClassMembers
-                .filterIsInstance<IrDeclarationWithVisibility>()
-                .map(IrDeclarationWithVisibility::visibility)
-                .all(DescriptorVisibilities::isPrivate)
+                .all {
+                    val isPrivate = it is IrDeclarationWithVisibility && DescriptorVisibilities.isPrivate(it.visibility)
+                    val isInlineOnly = it.hasAnnotation(INLINE_ONLY_ANNOTATION_FQ_NAME)
+                    isPrivate || isInlineOnly
+                }
 
         return IrClassImpl(
             0, fileEntry.maxOffset,
