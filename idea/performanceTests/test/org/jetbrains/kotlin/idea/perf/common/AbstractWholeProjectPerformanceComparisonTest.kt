@@ -8,7 +8,7 @@ package org.jetbrains.kotlin.idea.perf.common
 import org.jetbrains.kotlin.idea.perf.*
 import org.jetbrains.kotlin.idea.perf.util.TeamCity
 import org.jetbrains.kotlin.idea.testFramework.ProjectOpenAction
-
+//m
 abstract class AbstractWholeProjectPerformanceComparisonTest : AbstractPerformanceProjectsTest() {
     abstract val testPrefix: String
 
