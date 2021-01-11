@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.idea.frontend.api.fir.components
 
 import org.jetbrains.kotlin.fir.FirSymbolOwner
 import org.jetbrains.kotlin.fir.declarations.*
+import org.jetbrains.kotlin.fir.render
 import org.jetbrains.kotlin.fir.resolve.ScopeSession
 import org.jetbrains.kotlin.fir.scopes.*
 import org.jetbrains.kotlin.fir.symbols.AbstractFirBasedSymbol
@@ -82,7 +83,6 @@ internal class KtFirSymbolDeclarationOverridesProvider(
 
     private fun <D> AbstractFirBasedSymbol<D>.getIntersectionOverriddenSymbols(): Collection<FirCallableSymbol<*>>
             where D : FirSymbolOwner<D>, D : FirDeclaration {
-        require(fir.origin == FirDeclarationOrigin.IntersectionOverride)
         return when (this) {
             is FirIntersectionOverrideFunctionSymbol -> intersections
             is FirIntersectionOverridePropertySymbol -> intersections
