@@ -39,38 +39,38 @@ abstract class AbstractWholeProjectPerformanceComparisonTest : AbstractPerforman
     }
 
     protected fun doTestRustPluginCompletion() {
-        TeamCity.suite("$testPrefix completion in Rust plugin") {
-            Stats("$testPrefix completion in Rust plugin").use { stat ->
-                perfOpenRustPluginProject(stat)
-
-                perfTypeAndAutocomplete(
-                    stat,
-                    fileName = FILE_NAMES.REGEXP_FILE_LINK_FILTER,
-                    marker = "fun applyFilter(line: String, entireLength: Int): Filter.Result? {",
-                    insertString = "val a = l",
-                    lookupElements = listOf("line"),
-                    note = "in-method completion"
-                )
-
-                perfTypeAndAutocomplete(
-                    stat,
-                    fileName = FILE_NAMES.NAME_RESOLUTION,
-                    marker = "private data class ImplicitStdlibCrate(val name: String, val crateRoot: RsFile)",
-                    insertString = "\nval a = ",
-                    lookupElements = listOf("processAssocTypeVariants"),
-                    note = "top-level completion"
-                )
-
-                perfTypeAndAutocomplete(
-                    stat,
-                    fileName = FILE_NAMES.NAME_RESOLUTION,
-                    marker = "testAssert { cameFrom.context == scope }",
-                    insertString = "\nval a = s",
-                    lookupElements = listOf("scope"),
-                    note = "in big method in big file completion"
-                )
-            }
-        }
+//        TeamCity.suite("$testPrefix completion in Rust plugin") {
+//            Stats("$testPrefix completion in Rust plugin").use { stat ->
+//                perfOpenRustPluginProject(stat)
+//
+//                perfTypeAndAutocomplete(
+//                    stat,
+//                    fileName = FILE_NAMES.REGEXP_FILE_LINK_FILTER,
+//                    marker = "fun applyFilter(line: String, entireLength: Int): Filter.Result? {",
+//                    insertString = "val a = l",
+//                    lookupElements = listOf("line"),
+//                    note = "in-method completion"
+//                )
+//
+//                perfTypeAndAutocomplete(
+//                    stat,
+//                    fileName = FILE_NAMES.NAME_RESOLUTION,
+//                    marker = "private data class ImplicitStdlibCrate(val name: String, val crateRoot: RsFile)",
+//                    insertString = "\nval a = ",
+//                    lookupElements = listOf("processAssocTypeVariants"),
+//                    note = "top-level completion"
+//                )
+//
+//                perfTypeAndAutocomplete(
+//                    stat,
+//                    fileName = FILE_NAMES.NAME_RESOLUTION,
+//                    marker = "testAssert { cameFrom.context == scope }",
+//                    insertString = "\nval a = s",
+//                    lookupElements = listOf("scope"),
+//                    note = "in big method in big file completion"
+//                )
+//            }
+//        }
     }
 
     private fun perfOpenRustPluginProject(stats: Stats) {
