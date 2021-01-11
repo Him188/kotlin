@@ -7,18 +7,16 @@ package org.jetbrains.kotlin.idea.frontend.api.fir.components
 
 import org.jetbrains.kotlin.fir.FirSymbolOwner
 import org.jetbrains.kotlin.fir.declarations.*
-import org.jetbrains.kotlin.fir.render
 import org.jetbrains.kotlin.fir.resolve.ScopeSession
 import org.jetbrains.kotlin.fir.scopes.*
 import org.jetbrains.kotlin.fir.symbols.AbstractFirBasedSymbol
-import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirIntersectionOverrideFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirIntersectionOverridePropertySymbol
+import org.jetbrains.kotlin.fir.unwrapFakeOverrides
 import org.jetbrains.kotlin.idea.frontend.api.ValidityToken
 import org.jetbrains.kotlin.idea.frontend.api.components.KtSymbolDeclarationOverridesProvider
 import org.jetbrains.kotlin.idea.frontend.api.fir.KtFirAnalysisSession
-import org.jetbrains.kotlin.idea.frontend.api.fir.buildSymbol
 import org.jetbrains.kotlin.idea.frontend.api.fir.symbols.KtFirClassOrObjectSymbol
 import org.jetbrains.kotlin.idea.frontend.api.fir.symbols.KtFirSymbol
 import org.jetbrains.kotlin.idea.frontend.api.symbols.*
@@ -81,14 +79,14 @@ internal class KtFirSymbolDeclarationOverridesProvider(
         }
     }
 
-    private fun <D> AbstractFirBasedSymbol<D>.getIntersectionOverriddenSymbols(): Collection<FirCallableSymbol<*>>
-            where D : FirSymbolOwner<D>, D : FirDeclaration {
-        return when (this) {
-            is FirIntersectionOverrideFunctionSymbol -> intersections
-            is FirIntersectionOverridePropertySymbol -> intersections
-            else -> error(
-                "FirDeclaration has origin=IntersectionOverride but it is ${this::class.simpleName}, which is not FirIntersectionOverride*Symbol"
-            )
+    private fun AbstractFirBasedSymbol<*>.getIntersectionOverriddenSymbols(): Collection<FirCallableSymbol<*>> {
+        require(this is FirCallableSymbol<*>) {
+            "Required FirCallableSymbol but ${this::class} found"
+        }
+        return when (val unwrapped = unwrapFakeOverrides()) {
+            is FirIntersectionOverrideFunctionSymbol -> unwrapped.intersections
+            is FirIntersectionOverridePropertySymbol -> unwrapped.intersections
+            else -> return listOf(unwrapped)
         }
     }
 }
