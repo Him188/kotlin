@@ -1,9 +1,14 @@
 OUT:
 Buildfile: [TestData]/build.xml
 
+premain:
+    [javac] Compiling 1 source file to [Temp]
+      [jar] Building jar: [Temp]/premain.jar
+
 build:
   [kotlinc] Compiling [[TestData]] => [[Temp]/fork.jar]
-  [kotlinc] -XX:CICompilerCount=4 -XX:InitialHeapSize=67108864 -XX:MaxHeapSize=134217728 -XX:MaxNewSize=33554432 -XX:NewSize=33554432 -XX:+PrintCommandLineFlags -XX:ReservedCodeCacheSize=67108864 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:-UseLargePagesIndividualAllocation -XX:+UseParallelGC
+  [kotlinc] -Xms64m
+  [kotlinc] -Xmx128m
   [kotlinc] error: warnings found and -Werror specified
   [kotlinc] [TestData]/test.kt:4:15: warning: this cast can never succeed
   [kotlinc]     println(0 as String)
@@ -12,7 +17,7 @@ build:
 ERR:
 
 BUILD FAILED
-[TestData]/build.xml:4: Compile failed; see the compiler error output for details.
+[TestData]/build.xml:18: Compile failed; see the compiler error output for details.
 
 Total time: [time]
 
