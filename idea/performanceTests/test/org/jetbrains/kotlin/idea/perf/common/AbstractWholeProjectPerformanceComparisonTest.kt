@@ -30,7 +30,7 @@ abstract class AbstractWholeProjectPerformanceComparisonTest : AbstractPerforman
                     FILE_NAMES.REGEXP_FILE_LINK_FILTER,
                     "src/main/kotlin/org/rust/cargo/util/CargoOptions.kt",
                     "src/main/kotlin/org/rust/lang/core/macros/MacroExpansionManager.kt",
-                    FILE_NAMES.NAME_RESOLUTION
+//                    FILE_NAMES.NAME_RESOLUTION
                 )
 
                 filesToHighlight.forEach { file -> perfHighlightFileEmptyProfile(file, stats = stat) }
@@ -85,7 +85,7 @@ abstract class AbstractWholeProjectPerformanceComparisonTest : AbstractPerforman
     }
 
     private object FILE_NAMES {
-        const val NAME_RESOLUTION = "src/main/kotlin/org/rust/lang/core/resolve/NameResolution.kt"
+//        const val NAME_RESOLUTION = "src/main/kotlin/org/rust/lang/core/resolve/NameResolution.kt"
         const val REGEXP_FILE_LINK_FILTER = "src/main/kotlin/org/rust/cargo/runconfig/filters/RegexpFileLinkFilter.kt"
     }
 }
