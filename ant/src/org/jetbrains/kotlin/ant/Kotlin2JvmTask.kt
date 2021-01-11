@@ -93,15 +93,12 @@ class Kotlin2JvmTask : KotlinCompilerBaseTask() {
         val javaBin = javaHome + separator + "bin" + separator + "java"
         val redirector = Redirector(this)
 
-        val msgRendererPropKey = "org.jetbrains.kotlin.cliMessageRenderer"
-        val msgRendererPropVal = "FullPath"
-
         fillArguments()
 
         val command = ArrayList<String>()
         command.add(javaBin)
         command.addAll(cmdl.vmCommand.arguments) // jvm args
-        command.add("-D$msgRendererPropKey=$msgRendererPropVal") // same MessageRenderer as non-forking mode
+        command.add("-Dorg.jetbrains.kotlin.cliMessageRenderer=FullPath") // same MessageRenderer as non-forking mode
         command.add("-cp")
         command.add(KotlinAntTaskUtil.compilerJar.canonicalPath)
         command.add(compilerFqName)
